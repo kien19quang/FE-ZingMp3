@@ -1,0 +1,9 @@
+.wrapper {
+    display: flex;
+    height: var(--default-layout-header-height);
+    width: var(--default-layout-width);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    padding: 0 60px;
+    background-color: #170f23;
+    align-items: center;
+}

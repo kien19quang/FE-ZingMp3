@@ -1,0 +1,14 @@
+.wrapper {
+    display: flex;
+
+    .container-right {
+        display: flex;
+        flex-direction: column;
+
+        .content {
+            width: var(--default-layout-width);
+            padding: 0 60px;
+            flex: 1;
+        }
+    }
+}
