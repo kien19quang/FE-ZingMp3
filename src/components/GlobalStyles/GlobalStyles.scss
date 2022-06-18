@@ -3,9 +3,18 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400;500;600;700&display=swap');
 
 :root {
+    --primary-color: #170f23;
+    --primary-purple-color: #7200a1;
+    --white-color: #fff;
+    --black-color: #000;
+    --text-color: #333;
+    --primary-color-player: hsla(0, 0%, 100%, 0.1);
+
     // Default Layout
     --default-layout-header-height: 70px;
     --default-layout-width: 1248px;
+
+    --img-logo-mp3: url('https://zmp3-static.zmdcdn.me/skins/zmp3-v6.1/images/backgrounds/logo-dark.svg');
 }
 
 * {
@@ -23,4 +32,16 @@ body {
     font-size: 1.6rem;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
+
+a[href] {
+    color: var(--text-color);
+    text-decoration: none;
 }
