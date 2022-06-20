@@ -8,9 +8,6 @@ import {
     faList,
     faRankingStar,
     faVideo,
-    faCirclePlay,
-    faClipboardList,
-    faClock,
 } from '@fortawesome/free-solid-svg-icons';
 
 let selectionMain = [

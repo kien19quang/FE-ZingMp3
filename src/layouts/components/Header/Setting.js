@@ -1,0 +1,40 @@
+import classNames from 'classnames/bind';
+import styles from './Setting.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { listItemMain, listItemImplement } from './ListItem';
+
+const cx = classNames.bind(styles);
+
+function Setting() {
+    return (
+        <div className={cx('wrapper')}>
+            <ul className={cx('menu-item')}>
+                {listItemMain &&
+                    listItemMain.map((item, index) => {
+                        return (
+                            <li>
+                                <FontAwesomeIcon icon={item.icon} className={cx('icon')} key={index} />
+                                <span>{item.value}</span>
+                            </li>
+                        );
+                    })}
+            </ul>
+
+            <div className={cx('menu-implement')}>
+                {listItemImplement &&
+                    listItemImplement.map((item, index) => {
+                        return (
+                            <li title={item.value} key={index}>
+                                <FontAwesomeIcon icon={item.icon} className={cx('icon')} />
+                                <a href={item.href ? item.href : '#'} target={item.href && '_blank'}>
+                                    {item.value}
+                                </a>
+                            </li>
+                        );
+                    })}
+            </div>
+        </div>
+    );
+}
+
+export default Setting;

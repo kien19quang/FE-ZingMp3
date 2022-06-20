@@ -1,0 +1,191 @@
+.footer {
+    height: 90px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #120c1c;
+    border-top: 1px solid var(--primary-color-player);
+
+    .content-left {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        .avatar-song {
+            width: 64px;
+            height: 64px;
+        }
+
+        .description {
+            color: var(--white-color);
+            cursor: pointer;
+
+            .song-name {
+                font-size: 1.5rem;
+            }
+
+            .author {
+                font-size: 1.4rem;
+                opacity: 0.5;
+            }
+        }
+
+        .icon-music {
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    }
+
+    .content-center {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        gap: 12px;
+        .control-center {
+            display: flex;
+            gap: 16px;
+        }
+
+        .time-control {
+            width: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            span {
+                color: var(--white-color);
+                font-size: 1.4rem;
+            }
+
+            .progress-bar {
+                width: 480px;
+                height: 15px;
+                display: flex;
+                align-items: center;
+
+                .progress {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 3px;
+                    border-radius: 4px;
+                    background: linear-gradient(
+                        to right,
+                        #fff 0%,
+                        #fff 19.3131%,
+                        hsla(0, 0%, 100%, 0.3) 19.3131%,
+                        hsla(0, 0%, 100%, 0.3) 100%
+                    );
+                    cursor: pointer;
+
+                    &:hover {
+                        height: 6px;
+                        .slider-handle {
+                            display: flex;
+                            align-items: center;
+                            visibility: visible;
+                            width: 14px;
+                            height: 14px;
+                            border-radius: 50%;
+                            background-color: var(--white-color);
+                            transform: translate(86.6173px);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .content-right {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+
+        .sound-control {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            .icon-volume {
+                width: 18px;
+            }
+
+            &:hover {
+                .slider-handle {
+                    display: flex;
+                    align-items: center;
+                    visibility: visible;
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    background-color: var(--white-color);
+                    transform: translate(8px);
+                }
+            }
+
+            .progress-bar {
+                width: 70px;
+                height: 15px;
+                display: flex;
+                align-items: center;
+
+                .progress {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 3px;
+                    border-radius: 4px;
+                    background: linear-gradient(
+                        to right,
+                        #fff 0%,
+                        #fff 19.3131%,
+                        hsla(0, 0%, 100%, 0.3) 19.3131%,
+                        hsla(0, 0%, 100%, 0.3) 100%
+                    );
+                    cursor: pointer;
+
+                    &:hover {
+                        height: 6px;
+                    }
+                }
+            }
+        }
+
+        .list-music {
+            border-left: 1px solid var(--primary-color-player);
+            padding-left: 8px;
+        }
+    }
+}
+
+.btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    background-color: transparent;
+    border-radius: 50%;
+    color: var(--white-color);
+    cursor: pointer;
+    font-size: 1.8rem;
+
+    &.btn-center {
+        font-size: 4rem;
+
+        &:hover {
+            color: #c662ef;
+        }
+    }
+
+    &:hover {
+        background-color: var(--primary-color-player);
+    }
+}
