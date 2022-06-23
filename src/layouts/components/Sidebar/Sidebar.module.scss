@@ -36,6 +36,8 @@
     background-color: #231b2e;
     display: flex;
     flex-direction: column;
+    position: fixed;
+    top: 0;
 
     .logo-mp3 {
         width: 120px;

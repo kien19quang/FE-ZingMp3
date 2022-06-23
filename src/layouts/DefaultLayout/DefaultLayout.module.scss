@@ -1,14 +1,26 @@
 .wrapper {
     display: flex;
+    flex-direction: column;
+    position: sticky;
 
-    .container-right {
-        display: flex;
-        flex-direction: column;
+    .wrapper-up {
+        height: calc(100vh - 90px);
+        .container-right {
+            display: flex;
+            flex-direction: column;
+            margin-left: 240px;
+            height: calc(100vh - 90px);
 
-        .content {
-            width: var(--default-layout-width);
-            padding: 0 60px;
-            flex: 1;
+            .content {
+                width: var(--default-layout-width);
+                padding: 0 42px;
+                overflow-y: scroll;
+                flex: 1;
+                background-color: var(--primary-color);
+                color: var(--white-color);
+            }
         }
+    }
+    .wrapper-down {
     }
 }

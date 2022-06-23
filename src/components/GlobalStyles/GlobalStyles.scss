@@ -9,6 +9,7 @@
     --black-color: #000;
     --text-color: #333;
     --primary-color-player: hsla(0, 0%, 100%, 0.1);
+    --link-text-hover: #c662ef;
 
     // Default Layout
     --default-layout-header-height: 70px;
@@ -41,7 +42,7 @@ input,
     border: none;
 }
 
-a[href] {
+a {
     color: var(--text-color);
     text-decoration: none;
 }
@@ -51,3 +52,13 @@ ul {
 }
 
 // Fonts emmbeded
+
+html *::-webkit-scrollbar {
+    width: 0;
+}
+
+.slick-slider .slick-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 4rem;
+}

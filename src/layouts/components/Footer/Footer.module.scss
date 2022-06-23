@@ -1,10 +1,13 @@
 .footer {
     height: 90px;
+    width: 100%;
     display: flex;
     align-items: center;
     padding: 0 20px;
     background-color: #120c1c;
     border-top: 1px solid var(--primary-color-player);
+    position: fixed;
+    bottom: 0;
 
     .content-left {
         width: 25%;

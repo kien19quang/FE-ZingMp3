@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react/headless';
 import styles from './Header.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight, faGear, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faGear, faL, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import AvatarUser from '@/assets/images/Avatar-user.jpg';
 import { Wrapper as PopperWrapper } from '@/components/Popper';
 import Setting from './Setting';
@@ -33,6 +33,7 @@ function Header() {
                     <Tippy
                         interactive={true}
                         placement="bottom-end"
+                        hideOnClick={false}
                         delay={[0, 700]}
                         render={(attrs) => (
                             <div className={cx('button-setting')} tabIndex="-1" {...attrs}>
@@ -49,6 +50,7 @@ function Header() {
                     <Tippy
                         interactive={true}
                         placement="bottom-end"
+                        hideOnClick={false}
                         render={(attrs) => (
                             <div className={cx('button-setting')} tabIndex="-1" {...attrs}>
                                 <PopperWrapper>
