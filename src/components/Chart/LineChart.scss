@@ -12,6 +12,20 @@
     font-size: 3rem;
     font-weight: 700;
     line-height: 1.4;
+
+    span {
+        cursor: pointer;
+
+        &:hover {
+            color: #c662ef;
+        }
+    }
+
+    .icon-play {
+        &:hover {
+            filter: brightness(0.9);
+        }
+    }
 }
 
 .chart-content {

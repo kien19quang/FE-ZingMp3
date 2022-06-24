@@ -3,6 +3,8 @@ import styles from './Sidebar.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { selectionMain, sectionAdd } from './Selection';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+
 const cx = classNames.bind(styles);
 
 function Sidebar() {
@@ -32,10 +34,15 @@ function Sidebar() {
                     {sectionAdd &&
                         sectionAdd.map((item, index) => {
                             return (
-                                <div className={cx('select', `${item.option}`)} key={index} title={item.value}>
+                                <Link
+                                    to={item.to}
+                                    className={cx('select', `${item.option}`)}
+                                    key={index}
+                                    title={item.value}
+                                >
                                     <FontAwesomeIcon icon={item.icon} />
                                     <span>{item.value}</span>
-                                </div>
+                                </Link>
                             );
                         })}
 

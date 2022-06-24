@@ -7,7 +7,7 @@
     --primary-purple-color: #7200a1;
     --white-color: #fff;
     --black-color: #000;
-    --text-color: #333;
+    --text-color: hsla(0, 0%, 100%, 0.5);
     --primary-color-player: hsla(0, 0%, 100%, 0.1);
     --link-text-hover: #c662ef;
 
@@ -43,8 +43,9 @@ input,
 }
 
 a {
-    color: var(--text-color);
+    color: var(--white-color);
     text-decoration: none;
+    display: block;
 }
 
 ul {
@@ -61,4 +62,40 @@ html *::-webkit-scrollbar {
     width: 40px;
     height: 40px;
     font-size: 4rem;
+}
+
+@keyframes spinner {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCDBack {
+    0% {
+        transform: rotate(0);
+        border-radius: 50%;
+    }
+
+    25% {
+        transform: rotate(360deg);
+        border-radius: 50%;
+    }
+
+    55% {
+        transform: rotate(720deg);
+        border-radius: 50%;
+    }
+
+    75% {
+        transform: rotate(1080deg);
+        border-radius: 50%;
+    }
+
+    100% {
+        transform: rotate(1080deg);
+        border-radius: 10px;
+    }
 }

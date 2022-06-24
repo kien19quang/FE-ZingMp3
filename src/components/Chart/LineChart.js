@@ -4,7 +4,6 @@ import { Line } from 'react-chartjs-2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './LineChart.scss';
-import Image from '@/assets/images/Cover image/karik.jpg';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 
 Chart.register(...registerables);
@@ -77,7 +76,7 @@ function LineChart({ chart, items }) {
 
     let handleCounter = (items, encodeId) => {
         let counters = [];
-        items[encodeId].map((item, index) => {
+        items[encodeId].forEach((item, index) => {
             if (index % 2 === 0 && index < 24) {
                 counters.push(item.counter);
             }
@@ -158,8 +157,8 @@ function LineChart({ chart, items }) {
             <div className="chart-content">
                 <div className="chart-content-left">
                     <div className="chart-content-header">
-                        #zingchart
-                        <FontAwesomeIcon icon={faCirclePlay} />
+                        <span>#zingchart</span>
+                        <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
                     </div>
                     <div className="chart-song-list">
                         {dataTopSongs &&

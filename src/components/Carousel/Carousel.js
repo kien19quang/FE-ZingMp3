@@ -23,9 +23,9 @@ function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/' }
                     playlistSlider.map((item, index) => {
                         return (
                             <div className={cx('carousel-item', { [type]: type })} key={item.encodeId}>
-                                <div className={cx('img-item-wrapper')}>
+                                <Link to={item.link} className={cx('img-item-wrapper')}>
                                     <img src={item.thumbnailM} alt={item.title} className={cx('img-item')} />
-                                </div>
+                                </Link>
 
                                 <div className={cx('carousel-description')}>
                                     <span className={cx('main-text')}>{item.title}</span>
