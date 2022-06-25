@@ -1,13 +1,12 @@
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Album.modulo.scss';
-import Image from '@/assets/images/Cover image/karik.jpg';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faList, faMusic, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { getDetailAlbum } from '@/services/AlbumService';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
+import MediaList from '@/components/MediaList/MediaList';
 
 const cx = classNames.bind(styles);
 
@@ -15,8 +14,6 @@ function Album() {
     let [play, setPlay] = useState(false);
     let [firstTime, setFirstTime] = useState(true);
     let [data, setData] = useState({});
-    let [hover, setHover] = useState(false);
-    let [pos, setPos] = useState(0);
 
     let params = useParams();
     let id = params.id.slice(0, 8);
@@ -35,8 +32,6 @@ function Album() {
 
         getDetailAlbums();
     }, []);
-
-    console.log(data);
 
     let handlePlay = () => {
         setFirstTime(false);
@@ -64,16 +59,6 @@ function Album() {
         return `${hour}${minutes}${seconds}`;
     };
 
-    let handleHover = (index) => {
-        setPos(index);
-        setHover(true);
-    };
-
-    let handleMouseLeave = () => {
-        setPos(-1);
-        setHover(false);
-    };
-
     let total = '100';
     let totalDuration = '08:06:03';
 
@@ -88,120 +73,58 @@ function Album() {
 
     return (
         <>
-            {data && (
-                <div className={cx('wrapper-album')}>
-                    <div className={cx('content-left')}>
-                        <div
-                            className={cx('wrapper-img', {
-                                [thump_rotate]: thump_rotate,
-                            })}
-                            onClick={handlePlay}
-                        >
-                            <img src={data.thumbnailM} alt={data.title} className={cx('img-item-album')} />
-                        </div>
-
-                        <div className={cx('album-text-box')}>
-                            <span className={cx('title-album')}> {data.title} </span>
-                            <span>Cập nhật: {timeUpdate}</span>
-                            <span>{data.artistsNames}</span>
-                            <span>{handleNumberFarorites(data.like)} người yêu thích</span>
-                        </div>
-
-                        <div className={cx('action-album')}>
-                            <div className={cx('desc-button')} onClick={handlePlay}>
-                                {play ? (
-                                    <>
-                                        <FontAwesomeIcon icon={faPause} />
-                                        <span>Tạm dừng </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <FontAwesomeIcon icon={faPlay} />
-                                        <span>Tiếp tục phát</span>
-                                    </>
-                                )}
+            <div className={cx('wrapper-album')}>
+                {data && (
+                    <>
+                        <div className={cx('content-left')}>
+                            <div
+                                className={cx('wrapper-img', {
+                                    [thump_rotate]: thump_rotate,
+                                })}
+                                onClick={handlePlay}
+                            >
+                                <img src={data.thumbnailM} alt={data.title} className={cx('img-item-album')} />
                             </div>
-                        </div>
-                    </div>
 
-                    <div className={cx('content-right')}>
-                        <div className={cx('description')}>
-                            <span>Lời tựa:</span>
-                            <span className={cx('main-desc')}>{data.sortDescription}</span>
-                        </div>
+                            <div className={cx('album-text-box')}>
+                                <span className={cx('title-album')}> {data.title} </span>
+                                <span>Cập nhật: {timeUpdate}</span>
+                                <span>{data.artistsNames}</span>
+                                <span>{handleNumberFarorites(data.like)} người yêu thích</span>
+                            </div>
 
-                        <div className={cx('media-list')}>
-                            <div className={cx('select-header')}>
-                                <div className={cx('media-left')}>
-                                    <FontAwesomeIcon icon={faList} />
-                                    <span>Bài hát</span>
-                                </div>
-                                <div className={cx('media-content')}>
-                                    <span>Album</span>
-                                </div>
-                                <div className={cx('media-right')}>
-                                    <span>Thời gian</span>
+                            <div className={cx('action-album')}>
+                                <div className={cx('desc-button')} onClick={handlePlay}>
+                                    {play ? (
+                                        <>
+                                            <FontAwesomeIcon icon={faPause} />
+                                            <span>Tạm dừng </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FontAwesomeIcon icon={faPlay} />
+                                            <span>Tiếp tục phát</span>
+                                        </>
+                                    )}
                                 </div>
                             </div>
-                            <div>
-                                {data.song &&
-                                    data.song.items &&
-                                    data.song.items.map((item, index) => {
-                                        let albumTitle = '';
+                        </div>
 
-                                        if (item.album && item.album.title) {
-                                            albumTitle = item.album.title;
-                                        }
-                                        return (
-                                            <div
-                                                className={cx('select-item')}
-                                                onMouseOver={() => handleHover(index)}
-                                                onMouseLeave={() => handleMouseLeave()}
-                                            >
-                                                <div className={cx('media-left')}>
-                                                    <FontAwesomeIcon icon={faMusic} />
-                                                    <div className={cx('img-song-media')}>
-                                                        <img
-                                                            src={item.thumbnailM}
-                                                            alt={item.title}
-                                                            className={cx('img-song')}
-                                                        />
-                                                    </div>
-                                                    <div className={cx('media-text')}>
-                                                        <span className={cx('title-media')}>{item.title}</span>
-                                                        <span>{item.artistsNames}</span>
-                                                    </div>
-                                                </div>
-                                                <div className={cx('media-content')}>
-                                                    <span className={cx('desc-media')}>{albumTitle}</span>
-                                                </div>
-                                                <div className={cx('media-right')}>
-                                                    {index !== pos && (
-                                                        <div className={cx('time-item')}>
-                                                            <span>{handleTime(item.duration)}</span>
-                                                        </div>
-                                                    )}
+                        <div className={cx('content-right')}>
+                            <div className={cx('description')}>
+                                <span>Lời tựa:</span>
+                                <span className={cx('main-desc')}>{data.sortDescription}</span>
+                            </div>
 
-                                                    {hover && index === pos && (
-                                                        <div className={cx('hover-item')}>
-                                                            <button className={cx('btn')}>
-                                                                <FontAwesomeIcon icon={faHeart} />
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                            <MediaList data={data && data.song && data.song.items} />
+
+                            <div className={cx('sub-desc')}>
+                                <span>{`${total} bài hát - Tổng thời gian: ${totalDuration}`}</span>
                             </div>
                         </div>
-
-                        <div className={cx('sub-desc')}>
-                            <span>{`${total} bài hát - Tổng thời gian: ${totalDuration}`}</span>
-                        </div>
-                    </div>
-                </div>
-            )}
+                    </>
+                )}
+            </div>
         </>
     );
 }

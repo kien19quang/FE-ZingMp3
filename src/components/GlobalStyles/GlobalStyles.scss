@@ -46,6 +46,10 @@ a {
     color: var(--white-color);
     text-decoration: none;
     display: block;
+
+    &:hover {
+        color: #c662ef;
+    }
 }
 
 ul {

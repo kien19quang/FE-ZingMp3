@@ -2,62 +2,17 @@ import React from 'react';
 import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 
 import './LineChart.scss';
-import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import { options } from '@/config/ConfigChart';
 
 Chart.register(...registerables);
 
 function LineChart({ chart, items }) {
-    let options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: false,
-            },
-            tooltip: {
-                displayColors: false,
-                xAlign: 'center',
-                yAlign: 'bottom',
-                callbacks: {
-                    title: function () {
-                        return 'Lượt nghe';
-                    },
-                },
-            },
-        },
-        scales: {
-            x: {
-                grid: {
-                    color: 'transparent',
-                },
-                ticks: {
-                    color: 'white',
-                    font: {
-                        size: 14,
-                        family: "'IBM Plex Sans', sans-serif",
-                    },
-                },
-            },
-            y: {
-                ticks: {
-                    display: false,
-                },
-                grid: {
-                    borderDash: [2, 4],
-                    color: 'rgb(150, 150, 150)',
-                    drawBorder: false,
-                    drawTicks: false,
-                    tickLength: 10,
-                },
-                min: chart.minScore,
-                max: chart.maxScore,
-            },
-        },
-    };
+    options.scales.y.min = chart.minScore;
+    options.scales.y.max = chart.maxScore;
 
     let handlePercentTopSong = (score) => {
         let totalScore = chart.totalScore;
@@ -157,7 +112,7 @@ function LineChart({ chart, items }) {
             <div className="chart-content">
                 <div className="chart-content-left">
                     <div className="chart-content-header">
-                        <span>#zingchart</span>
+                        <Link to={'/zing-chart'}>#zingchart</Link>
                         <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
                     </div>
                     <div className="chart-song-list">
@@ -179,9 +134,9 @@ function LineChart({ chart, items }) {
                             })}
                     </div>
 
-                    <div className="chart-footer">
+                    <Link to={'/zing-chart'} className="chart-footer">
                         <div className="show-more">Xem thêm</div>
-                    </div>
+                    </Link>
                 </div>
                 <div className="line-chart">
                     <Line options={options} data={data} />

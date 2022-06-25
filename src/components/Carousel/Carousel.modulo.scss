@@ -29,15 +29,23 @@
 .carousel-container {
     padding: 16px;
     display: flex;
-    gap: 16px;
-    justify-content: space-between;
     flex-wrap: wrap;
+
+    &.primary {
+        gap: 28px;
+    }
+
+    &.large {
+        gap: 16px;
+        justify-content: space-between;
+    }
 }
 
 .carousel-item {
     width: 18%;
     overflow: hidden;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .carousel-item.large {

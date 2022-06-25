@@ -38,8 +38,6 @@ function Home() {
         getAllHomePage();
     }, []);
 
-    console.log(chart.chart);
-
     return (
         <div className={cx('wrapper')}>
             <Gallery bannerSlider={bannerSlider ? bannerSlider : {}} />
