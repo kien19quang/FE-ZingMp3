@@ -53,6 +53,7 @@ function Home() {
                 <Carousel
                     title={top100.title}
                     to={top100.link}
+                    showMore={true}
                     playlistSlider={top100.items && top100.items.slice(0, 5)}
                 />
             )}

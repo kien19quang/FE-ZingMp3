@@ -3,6 +3,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 import classNames from 'classnames/bind';
 import styles from './Gallery.modulo.scss';
@@ -10,7 +11,6 @@ import styles from './Gallery.modulo.scss';
 const cx = classNames.bind(styles);
 
 function Gallery({ bannerSlider, singers, type = 'primary' }) {
-    let isCheck = type === 'primary';
     let show = type === 'primary' ? 3 : 7;
 
     var settings = {
@@ -21,7 +21,7 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        arrows: isCheck,
+        arrows: true,
     };
 
     let handleNumberFarorites = (number) => {
@@ -48,21 +48,21 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
                     singers.map((item) => {
                         return (
                             <div className={cx('gallery-wrapper')} key={item.encodeId}>
-                                <div className={cx('gallery-item')}>
+                                <Link className={cx('gallery-item')} to={item.link}>
                                     <img
                                         src={item.thumbnail}
                                         alt={item.name}
                                         className={cx('img-gallery-item', { [type]: type })}
                                     />
-                                </div>
+                                </Link>
 
-                                <div className={cx('infor-singer')}>
+                                <Link className={cx('infor-singer')} to={item.link}>
                                     <span className={cx('name-singer')}>{item.name}</span>
                                     <span className={cx('number-favorites')}>
                                         <FontAwesomeIcon icon={faHeart} className={cx('icon-tym')} />
                                         {item.totalFollow ? handleNumberFarorites(item.totalFollow) : 0}
                                     </span>
-                                </div>
+                                </Link>
                             </div>
                         );
                     })}

@@ -31,7 +31,7 @@ function Album() {
         };
 
         getDetailAlbums();
-    }, []);
+    }, [id]);
 
     let handlePlay = () => {
         setFirstTime(false);

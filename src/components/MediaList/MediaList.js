@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function MediaList({ data, type = 'music', show = false }) {
+function MediaList({ data, type = 'music', show = false, showHeader = true }) {
     let [hover, setHover] = useState(false);
     let [pos, setPos] = useState(0);
 
@@ -38,18 +38,20 @@ function MediaList({ data, type = 'music', show = false }) {
 
     return (
         <div className={cx('media-list')}>
-            <div className={cx('select-header')}>
-                <div className={cx('media-left')}>
-                    <FontAwesomeIcon icon={faList} />
-                    <span>Bài hát</span>
+            {showHeader && (
+                <div className={cx('select-header')}>
+                    <div className={cx('media-left')}>
+                        <FontAwesomeIcon icon={faList} />
+                        <span>Bài hát</span>
+                    </div>
+                    <div className={cx('media-content')}>
+                        <span>Album</span>
+                    </div>
+                    <div className={cx('media-right')}>
+                        <span>Thời gian</span>
+                    </div>
                 </div>
-                <div className={cx('media-content')}>
-                    <span>Album</span>
-                </div>
-                <div className={cx('media-right')}>
-                    <span>Thời gian</span>
-                </div>
-            </div>
+            )}
             <div>
                 {data &&
                     data.map((item, index) => {

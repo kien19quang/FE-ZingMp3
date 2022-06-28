@@ -64,6 +64,7 @@ function ZingChart() {
 
     const handleChart = () => {
         if (!_.isEmpty(chart) && items) {
+            console.log('re-render');
             options.scales.y.min = chart.minScore;
             options.scales.y.max = chart.maxScore;
 
@@ -161,13 +162,13 @@ function ZingChart() {
             <div className={cx('wrapper-weektop')}>
                 <div className={cx('bg-alpha')}>
                     <div className={cx('section-header')}>
-                        <Link to={'#'}>Bảng xếp hạng tuần</Link>
+                        {!_.isEmpty(weekChart) && <Link to={weekChart.vn.link}>Bảng xếp hạng tuần</Link>}
                     </div>
 
                     <div className={cx('week-chart-box')}>
                         <div className={cx('week-chart-item')}>
                             <div className={cx('header-item')}>
-                                <Link to={'#'}>Việt Nam</Link>
+                                {!_.isEmpty(weekChart) && <Link to={weekChart.vn.link}>Việt Nam</Link>}
                                 <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
                             </div>
                             {!_.isEmpty(weekChart) && <WeekChart data={weekChart.vn.items.slice(0, 5)} type="rank" />}
@@ -178,7 +179,7 @@ function ZingChart() {
 
                         <div className={cx('week-chart-item')}>
                             <div className={cx('header-item')}>
-                                <Link to={'#'}>US-UK</Link>
+                                {!_.isEmpty(weekChart) && <Link to={weekChart.us.link}>US-UK</Link>}
                                 <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
                             </div>
                             {!_.isEmpty(weekChart) && <WeekChart data={weekChart.us.items.slice(0, 5)} type="rank" />}
@@ -189,7 +190,7 @@ function ZingChart() {
 
                         <div className={cx('week-chart-item')}>
                             <div className={cx('header-item')}>
-                                <Link to={'#'}>K-POP</Link>
+                                {!_.isEmpty(weekChart) && <Link to={weekChart.korea.link}>K-POP</Link>}
                                 <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
                             </div>
                             {!_.isEmpty(weekChart) && (

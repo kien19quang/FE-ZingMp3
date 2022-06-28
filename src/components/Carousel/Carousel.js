@@ -6,12 +6,12 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/' }) {
+function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/', showMore = false }) {
     return (
         <>
             <div className={cx('carousel-text')}>
                 <span className={cx('carousel-title')}>{type === 'primary' && title}</span>
-                {title === 'Top 100' && (
+                {showMore && (
                     <Link to={to} className={cx('all-top-100')}>
                         <span>Tất cả</span>
                         <FontAwesomeIcon icon={faChevronRight} />
@@ -29,7 +29,7 @@ function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/' }
 
                                 <div className={cx('carousel-description')}>
                                     <span className={cx('main-text')}>{item.title}</span>
-                                    <span className={cx('sub-text')}>{item.sortDescription}</span>
+                                    <span className={cx('sub-text')}>{item.sortDescription || item.releaseDate}</span>
                                 </div>
                             </div>
                         );
@@ -39,9 +39,9 @@ function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/' }
                     weekTop.map((item, index) => {
                         return (
                             <div className={cx('carousel-item', { [type]: type })} key={index}>
-                                <div className={cx('img-item-wrapper')}>
+                                <Link to={item.link} className={cx('img-item-wrapper')}>
                                     <img src={item.banner} alt={item.country} className={cx('img-item')} />
-                                </div>
+                                </Link>
                             </div>
                         );
                     })}

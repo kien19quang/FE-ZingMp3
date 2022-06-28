@@ -19,13 +19,11 @@
         gap: 12px;
         cursor: pointer;
         opacity: 0.8;
+        font-weight: 600;
 
         &:hover {
             opacity: 1;
-        }
-
-        span {
-            font-weight: 600;
+            color: var(--white-color);
         }
     }
 }

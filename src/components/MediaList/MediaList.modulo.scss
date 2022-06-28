@@ -1,6 +1,7 @@
 .media-list {
     display: flex;
     flex-direction: column;
+    overflow: scroll;
 
     span {
         font-size: 1.4rem;

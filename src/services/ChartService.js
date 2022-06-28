@@ -4,4 +4,8 @@ const getChartHomeAPI = () => {
     return axios.get(`/zing-chart/getChartHome`);
 };
 
-export { getChartHomeAPI };
+const getNewReleaseChartAPI = () => {
+    return axios.get(`/zing-chart/getNewReleaseChart`);
+};
+
+export { getChartHomeAPI, getNewReleaseChartAPI };
