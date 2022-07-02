@@ -20,7 +20,7 @@ function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/', 
             </div>
             <div className={cx('carousel-container', { [type]: type })}>
                 {playlistSlider &&
-                    playlistSlider.map((item, index) => {
+                    playlistSlider.map((item) => {
                         return (
                             <div className={cx('carousel-item', { [type]: type })} key={item.encodeId}>
                                 <Link to={item.link} className={cx('img-item-wrapper')}>

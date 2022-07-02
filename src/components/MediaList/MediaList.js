@@ -4,12 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faList, faMinus, faMusic } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { getSong } from '@/services/SongService';
 
 const cx = classNames.bind(styles);
 
 function MediaList({ data, type = 'music', show = false, showHeader = true }) {
     let [hover, setHover] = useState(false);
     let [pos, setPos] = useState(0);
+    let dispatch = useDispatch();
 
     let handleTime = (secondsTotal) => {
         let hour = Math.floor(secondsTotal / 3600) === 0 ? '' : Math.floor(secondsTotal / 3600) + ':';
@@ -34,6 +38,17 @@ function MediaList({ data, type = 'music', show = false, showHeader = true }) {
     let handleMouseLeave = () => {
         setPos(-1);
         setHover(false);
+    };
+
+    let handlePlaySong = async (item, index) => {
+        let res = await getSong(item.encodeId);
+        if (res.err === 0) {
+            dispatch(updateLinkSong(res.data));
+        }
+
+        dispatch(updatePlaylist(data));
+        dispatch(updateIndex(index));
+        dispatch(updatePlay(true));
     };
 
     return (
@@ -72,7 +87,7 @@ function MediaList({ data, type = 'music', show = false, showHeader = true }) {
                                 onMouseOver={() => handleHover(index)}
                                 onMouseLeave={() => handleMouseLeave()}
                             >
-                                <div className={cx('media-left')}>
+                                <div className={cx('media-left')} onClick={() => handlePlaySong(item, index)}>
                                     {type === 'music' ? (
                                         <FontAwesomeIcon icon={faMusic} />
                                     ) : (
@@ -87,7 +102,7 @@ function MediaList({ data, type = 'music', show = false, showHeader = true }) {
                                         <span>{item.artistsNames}</span>
                                     </div>
                                 </div>
-                                <div className={cx('media-content')}>
+                                <div className={cx('media-content')} onClick={() => handlePlaySong(item, index)}>
                                     <span className={cx('desc-media')}>{albumTitle}</span>
                                 </div>
                                 <div className={cx('media-right')}>

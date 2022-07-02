@@ -30,6 +30,11 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
         return view + 'K';
     };
 
+    let handlePlayBanner = async (item) => {
+        let arr = item.link.split('/');
+        console.log(bannerSlider);
+    };
+
     return (
         <>
             <Slider {...settings} className={cx('slide-banner', { [type]: type })}>
@@ -37,7 +42,7 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
                     bannerSlider.map((item, index) => {
                         return (
                             <div className={cx('gallery-wrapper')} key={index}>
-                                <div className={cx('gallery-item')}>
+                                <div className={cx('gallery-item')} onClick={() => handlePlayBanner(item)}>
                                     <img src={item.banner} alt="" className={cx('img-gallery-item')} />
                                 </div>
                             </div>

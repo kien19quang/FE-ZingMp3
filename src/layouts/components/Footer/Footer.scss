@@ -30,6 +30,10 @@
             .author {
                 font-size: 1.4rem;
                 opacity: 0.5;
+                width: 200px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
 
@@ -51,6 +55,10 @@
         .control-center {
             display: flex;
             gap: 16px;
+
+            .btn-active {
+                color: var(--link-text-hover);
+            }
         }
 
         .time-control {
@@ -79,8 +87,8 @@
                     background: linear-gradient(
                         to right,
                         #fff 0%,
-                        #fff 19.3131%,
-                        hsla(0, 0%, 100%, 0.3) 19.3131%,
+                        #fff 0,
+                        hsla(0, 0%, 100%, 0.3) 0,
                         hsla(0, 0%, 100%, 0.3) 100%
                     );
                     cursor: pointer;
@@ -95,7 +103,7 @@
                             height: 14px;
                             border-radius: 50%;
                             background-color: var(--white-color);
-                            transform: translate(86.6173px);
+                            transform: translateX(0);
                         }
                     }
                 }
@@ -184,11 +192,44 @@
         font-size: 4rem;
 
         &:hover {
-            color: #c662ef;
+            color: var(--link-text-hover);
         }
     }
 
     &:hover {
         background-color: var(--primary-color-player);
+    }
+}
+
+.semantic_ui_range_inner {
+    margin: 0 !important;
+
+    div:first-child {
+        background-color: hsla(0, 0%, 100%, 0.3) !important;
+    }
+    div:nth-child(2) {
+        background-color: var(--white-color) !important;
+    }
+    div:last-child {
+        width: 14px !important;
+        height: 14px !important;
+        display: none !important;
+    }
+
+    &:hover {
+        div:first-child {
+            height: 7px !important;
+            top: 7px !important;
+        }
+        div:nth-child(2) {
+            height: 7px !important;
+            top: 7px !important;
+        }
+        div:last-child {
+            top: 3px !important;
+            width: 14px !important;
+            height: 14px !important;
+            display: block !important;
+        }
     }
 }

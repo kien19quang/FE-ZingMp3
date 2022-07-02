@@ -19,6 +19,7 @@ function Singer() {
     let [album, setAlbum] = useState({});
     let [colection, setColection] = useState({});
     let [appear, setAppear] = useState({});
+    let [isOpen, setIsOpen] = useState(false);
 
     let params = useParams();
     let artist = params.singerName;
@@ -30,7 +31,6 @@ function Singer() {
         { value: 'Album', option: 'album', to: `/${artist}/album` },
         { value: 'MV', option: 'video', to: `/${artist}/video` },
     ];
-    console.log(tab);
 
     useEffect(() => {
         let getArtist = async () => {
@@ -55,6 +55,10 @@ function Singer() {
         return view + 'K';
     };
 
+    let handleClose = () => {
+        setIsOpen(false);
+    };
+
     return (
         <>
             <div className="wrapper-artist">
@@ -64,7 +68,9 @@ function Singer() {
                             <span className="name-title">{singerInfo.name}</span>
                             <div className="sub-title">
                                 {singerInfo.sortBiography}
-                                <span className="more-infor">Xem thêm</span>
+                                <span className="more-infor" onClick={() => setIsOpen(true)}>
+                                    Xem thêm
+                                </span>
                             </div>
                             <div className="actions">
                                 <button>
@@ -139,7 +145,9 @@ function Singer() {
                     </div>
                 </div>
             </div>
-            <ModalSinger />
+            {!_.isEmpty(singerInfo) && (
+                <ModalSinger singerInfo={singerInfo} isOpen={isOpen} handleClose={handleClose} />
+            )}
         </>
     );
 }

@@ -11,15 +11,30 @@ import UserUntil from './UserUntil';
 const cx = classNames.bind(styles);
 
 function Header() {
+    let handleNavigate = (type) => {
+        if (type === 'back' && window.location.pathname !== '/') {
+            window.history.back();
+        }
+        if (type === 'forward') {
+            window.history.forward();
+        }
+    };
+
     return (
         <>
             <header className={cx('wrapper')}>
                 <div className={cx('nav-left')}>
                     <div className={cx('button-left')}>
-                        <button className={cx('btn', 'disabled')}>
+                        <button
+                            className={cx('btn', `${window.location.pathname === '/' && 'disabled'}`)}
+                            onClick={() => handleNavigate('back')}
+                        >
                             <FontAwesomeIcon icon={faArrowLeft} className={cx('icon-arrow-left')} />
                         </button>
-                        <button className={cx('btn', 'disabled')}>
+                        <button
+                            className={cx('btn', `${window.history.length === 2 && 'disabled'}`)}
+                            onClick={() => handleNavigate('forward')}
+                        >
                             <FontAwesomeIcon icon={faArrowRight} />
                         </button>
                     </div>

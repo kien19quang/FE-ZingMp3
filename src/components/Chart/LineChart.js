@@ -7,12 +7,17 @@ import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import './LineChart.scss';
 import { Link } from 'react-router-dom';
 import { options } from '@/config/ConfigChart';
+import { useDispatch } from 'react-redux';
+import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { getSong } from '@/services/SongService';
 
 Chart.register(...registerables);
 
 function LineChart({ chart, items }) {
     options.scales.y.min = chart.minScore;
     options.scales.y.max = chart.maxScore;
+
+    let dispatch = useDispatch();
 
     let handlePercentTopSong = (score) => {
         let totalScore = chart.totalScore;
@@ -107,6 +112,17 @@ function LineChart({ chart, items }) {
 
     let dataTopSongs = items ? items.slice(0, 3) : [];
 
+    let handlePlaySong = async (item, index) => {
+        let res = await getSong(item.encodeId);
+        if (res.err === 0) {
+            dispatch(updateLinkSong(res.data));
+        }
+
+        dispatch(updatePlaylist(dataTopSongs));
+        dispatch(updateIndex(index));
+        dispatch(updatePlay(true));
+    };
+
     return (
         <div className="chart-wrapper">
             <div className="chart-content">
@@ -119,7 +135,11 @@ function LineChart({ chart, items }) {
                         {dataTopSongs &&
                             dataTopSongs.map((item, index) => {
                                 return (
-                                    <div className="chart-song-item" key={item.encodeId}>
+                                    <div
+                                        className="chart-song-item"
+                                        key={item.encodeId}
+                                        onClick={() => handlePlaySong(item, index)}
+                                    >
                                         <div className="item-left">
                                             <span className={`number-rank-${index + 1}`}>{index + 1}</span>
                                             <img src={item.thumbnailM} alt={item.title} className="img-song-item" />

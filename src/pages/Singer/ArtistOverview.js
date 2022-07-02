@@ -84,9 +84,14 @@ function ArtistOverview({ popularSong, singleEP, album, colection, appear }) {
                 </div>
             </div>
 
-            <Carousel showMore={true} playlistSlider={singleEP.items.slice(0, 5)} title={singleEP.title} />
+            <Carousel
+                showMore={true}
+                playlistSlider={singleEP.items.slice(0, 5)}
+                title={singleEP.title}
+                to={singleEP.link}
+            />
 
-            <Carousel showMore={true} playlistSlider={album.items.slice(0, 5)} title={album.title} />
+            <Carousel showMore={true} playlistSlider={album.items.slice(0, 5)} title={album.title} to={album.link} />
 
             <Carousel playlistSlider={colection.items.slice(0, 5)} title={colection.title} />
 

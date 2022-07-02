@@ -14,6 +14,8 @@ function Album() {
     let [play, setPlay] = useState(false);
     let [firstTime, setFirstTime] = useState(true);
     let [data, setData] = useState({});
+    let [total, setTotal] = useState('100');
+    let [totalDuration, setTotalDuration] = useState('08:06:03');
 
     let params = useParams();
     let id = params.id.slice(0, 8);
@@ -32,6 +34,17 @@ function Album() {
 
         getDetailAlbums();
     }, [id]);
+
+    useEffect(() => {
+        let handleTotal = () => {
+            if (data && data.song) {
+                setTotal(data.song.total);
+                setTotalDuration(handleTime(data.song.totalDuration));
+            }
+        };
+
+        handleTotal();
+    }, [data]);
 
     let handlePlay = () => {
         setFirstTime(false);
@@ -58,18 +71,6 @@ function Album() {
 
         return `${hour}${minutes}${seconds}`;
     };
-
-    let total = '100';
-    let totalDuration = '08:06:03';
-
-    let handleTotal = () => {
-        if (data && data.song) {
-            total = data.song.total;
-            totalDuration = handleTime(data.song.totalDuration);
-        }
-    };
-
-    handleTotal();
 
     return (
         <>
