@@ -7,11 +7,17 @@ import { Link } from 'react-router-dom';
 
 import classNames from 'classnames/bind';
 import styles from './Gallery.modulo.scss';
+import { getSongInfo, getSong } from '@/services/SongService';
+import { useDispatch } from 'react-redux';
+import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 function Gallery({ bannerSlider, singers, type = 'primary' }) {
     let show = type === 'primary' ? 3 : 7;
+    let dispatch = useDispatch();
+    let navigate = useNavigate();
 
     var settings = {
         dots: false,
@@ -32,7 +38,20 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
 
     let handlePlayBanner = async (item) => {
         let arr = item.link.split('/');
-        console.log(bannerSlider);
+        if (arr[1] === 'bai-hat') {
+            let songInfo = await getSongInfo(item.encodeId);
+
+            if (songInfo.err === 0) {
+                let res = await getSong(songInfo.data.encodeId);
+                dispatch(updateLinkSong(res.data));
+                dispatch(updatePlaylist([songInfo.data]));
+                dispatch(updateIndex(0));
+                dispatch(updatePlay(true));
+            }
+        }
+        if (arr[1] === 'album') {
+            navigate(item.link);
+        }
     };
 
     return (

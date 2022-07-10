@@ -4,4 +4,8 @@ const getSong = (inputId) => {
     return axios.get(`/song/getSongById?id=${inputId}`);
 };
 
-export { getSong };
+const getSongInfo = (inputId) => {
+    return axios.get(`/song/getSongInfo?id=${inputId}`);
+};
+
+export { getSong, getSongInfo };
