@@ -6,7 +6,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function Carousel({ title, playlistSlider, weekTop, type = 'primary', to = '/', showMore = false }) {
+function Carousel({ title = '', playlistSlider, weekTop, type = 'primary', to = '/', showMore = false }) {
     return (
         <>
             <div className={cx('carousel-text')}>

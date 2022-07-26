@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 let selectionMain = [
-    { option: 'private', icon: faHeadphonesSimple, value: 'Cá nhân', to: '#' },
+    { option: 'private', icon: faHeadphonesSimple, value: 'Cá nhân', to: '/mymusic' },
     { option: 'discover', icon: faCompactDisc, value: 'Khám phá', to: '/', active: 'active' },
     { option: 'zingchart', icon: faChartLine, value: '#Zingchart', to: '/zing-chart' },
     { option: 'radio', icon: faRadio, value: 'Radio', to: '#' },

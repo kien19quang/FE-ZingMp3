@@ -28,7 +28,7 @@
     .menu-implement {
         padding-top: 10px;
         opacity: 0.6;
-        li {
+        a {
             padding: 10px 20px 12px 17px;
             display: flex;
             align-items: center;
@@ -46,7 +46,7 @@
                 background-color: var(--primary-color-player);
             }
 
-            a {
+            span {
                 color: var(--white-color);
             }
         }

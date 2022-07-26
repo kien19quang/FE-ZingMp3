@@ -49,8 +49,11 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
                 dispatch(updatePlay(true));
             }
         }
-        if (arr[1] === 'album') {
+        if (arr[1] === 'album' || arr[1] === 'playlist') {
             navigate(item.link);
+        }
+        if (arr[1] === 'liveradio') {
+            alert('Chức năng phát trực tiếp hiện tại đang được phát triển thêm. Mong bạn thông cảm');
         }
     };
 

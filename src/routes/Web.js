@@ -5,6 +5,7 @@ import ZingChart from '@/pages/ZingChart/ZingChart';
 import ZingChartWeek from '@/pages/ZingChart/ZingChartWeek';
 import NewReleaseChart from '@/pages/ZingChart/NewReleaseChart';
 import Singer from '@/pages/Singer/Singer';
+import MyMusic from '@/pages/MyMusic/MyMusic';
 import config from '@/config';
 
 const publicRoutes = [
@@ -16,6 +17,7 @@ const publicRoutes = [
     { path: config.routes.newReleaseChart, component: NewReleaseChart },
     { path: config.routes.singerName, component: Singer },
     { path: config.routes.singerTab, component: Singer },
+    { path: config.routes.myMusic, component: MyMusic },
     { path: config.routes.home, component: Home },
 ];
 

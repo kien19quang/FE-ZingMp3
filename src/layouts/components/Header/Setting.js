@@ -24,12 +24,15 @@ function Setting() {
                 {listItemImplement &&
                     listItemImplement.map((item, index) => {
                         return (
-                            <li title={item.value} key={index}>
+                            <a
+                                href={item.href ? item.href : '#'}
+                                target={item.href && '_blank'}
+                                title={item.value}
+                                key={index}
+                            >
                                 <FontAwesomeIcon icon={item.icon} className={cx('icon')} />
-                                <a href={item.href ? item.href : '#'} target={item.href && '_blank'}>
-                                    {item.value}
-                                </a>
-                            </li>
+                                <span>{item.value}</span>
+                            </a>
                         );
                     })}
             </div>

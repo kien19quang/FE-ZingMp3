@@ -14,7 +14,7 @@
             .content {
                 width: 100%;
                 padding: 0 42px;
-                overflow-y: scroll;
+                overflow: hidden scroll;
                 flex: 1;
                 background-color: var(--primary-color);
                 color: var(--white-color);

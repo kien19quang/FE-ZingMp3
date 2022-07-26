@@ -1,5 +1,6 @@
 import Header from '@/layouts/components/Header/Header';
 import Sidebar from '@/layouts/components/Sidebar/Sidebar';
+import Playlists from '../components/Playlists/Playlists';
 import Footer from '../components/Footer/Footer';
 import classNames from 'classnames/bind';
 import styles from './DefaultLayout.module.scss';
@@ -17,6 +18,8 @@ function DefaultLayout({ children }) {
                         <Header />
                         <div className={cx('content')}>{children}</div>
                     </div>
+
+                    <Playlists />
                 </div>
 
                 <div className={cx('wrapper-down')}>

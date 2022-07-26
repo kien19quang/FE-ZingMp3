@@ -6,6 +6,8 @@ let initialState = {
     playlist: [],
     linkSong: {},
     play: false,
+    playlistFavorite: [],
+    showPlaylist: false,
 };
 
 export const fetchSong = createAsyncThunk('song/getSong', async (songId) => {
@@ -35,6 +37,25 @@ export const songSlice = createSlice({
         updateLinkSong: (state, action) => {
             return { ...state, linkSong: action.payload };
         },
+
+        addSongFavorite: (state, action) => {
+            return { ...state, playlistFavorite: [...state.playlistFavorite, action.payload] };
+        },
+
+        removeSongFavorite: (state, action) => {
+            let copyPlayListFavorite = [];
+            state.playlistFavorite.forEach((item) => {
+                if (item.encodeId !== action.payload) {
+                    copyPlayListFavorite.push(item);
+                }
+            });
+
+            return { ...state, playlistFavorite: copyPlayListFavorite };
+        },
+
+        setShowPlaylist: (state) => {
+            return { ...state, showPlaylist: !state.showPlaylist };
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSong.fulfilled, (state, action) => {
@@ -46,6 +67,14 @@ export const songSlice = createSlice({
     },
 });
 
-export const { updateIndex, updatePlaylist, updatePlay, updateLinkSong } = songSlice.actions;
+export const {
+    updateIndex,
+    updatePlaylist,
+    updatePlay,
+    updateLinkSong,
+    addSongFavorite,
+    removeSongFavorite,
+    setShowPlaylist,
+} = songSlice.actions;
 
 export default songSlice.reducer;

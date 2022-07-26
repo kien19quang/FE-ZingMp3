@@ -36,6 +36,10 @@
     color: var(--text-color);
     border-radius: 4px;
 
+    &.is-active {
+        background-color: #2f2739;
+    }
+
     &:hover {
         background-color: #2f2739;
         border-color: #2f2739;
@@ -87,7 +91,7 @@
 }
 
 .media-content {
-    width: 45%;
+    width: 43%;
     display: flex;
     align-items: center;
 
@@ -103,12 +107,27 @@
 }
 
 .media-right {
-    width: 10%;
+    width: 12%;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
 
-    span {
-        text-align: center;
+    p {
+        margin-left: 8px;
+        font-size: 1.4rem;
+        color: var(--text-color);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-transform: uppercase;
+    }
+
+    .media-right-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
     }
 
     .time-item {
@@ -142,6 +161,10 @@
                 &:hover {
                     color: #c662ef;
                 }
+            }
+
+            &.active {
+                color: var(--primary-purple-color);
             }
 
             &:hover {

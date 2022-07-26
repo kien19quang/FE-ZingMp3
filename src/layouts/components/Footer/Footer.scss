@@ -8,6 +8,7 @@
     border-top: 1px solid var(--primary-color-player);
     position: fixed;
     bottom: 0;
+    z-index: 20;
 
     .content-left {
         width: 25%;
@@ -198,6 +199,10 @@
 
     &:hover {
         background-color: var(--primary-color-player);
+    }
+
+    &.btn-active {
+        color: var(--link-text-hover);
     }
 }
 

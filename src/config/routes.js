@@ -8,6 +8,7 @@ const routes = {
     newReleaseChart: '/moi-phat-hanh',
     singerName: '/:singerName/',
     singerTab: '/:singerName/:tab',
+    myMusic: '/mymusic',
 };
 
 export default routes;

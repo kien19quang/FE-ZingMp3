@@ -15,6 +15,7 @@
     --default-layout-header-height: 70px;
 
     --img-logo-mp3: url('https://zmp3-static.zmdcdn.me/skins/zmp3-v6.1/images/backgrounds/logo-dark.svg');
+    --empty-song-icon: url('https://zmp3-static.zmdcdn.me/skins/zmp3-v6.1/images/icons/empty-fav-song-dark.png');
 }
 
 * {
@@ -101,4 +102,8 @@ html *::-webkit-scrollbar {
         transform: rotate(1080deg);
         border-radius: 10px;
     }
+}
+
+.swal2-popup {
+    font-size: 1.6rem;
 }

@@ -1,17 +1,30 @@
+import { memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import './Footer.scss';
-import { buttonLeft } from './Button';
-import { faCirclePause, faList, faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
-import { faBackwardStep, faForwardStep, faRepeat, faShuffle, faCirclePlay } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCirclePause,
+    faList,
+    faVolumeHigh,
+    faVolumeXmark,
+    faBackwardStep,
+    faForwardStep,
+    faRepeat,
+    faShuffle,
+    faCirclePlay,
+    faHeart as faHeartSolid,
+} from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import HandleEvent from './HandleEvent';
 import { useEffect, useState } from 'react';
-import { updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { updateIndex, updatePlay, updateLinkSong, setShowPlaylist } from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
 import { Slider } from 'react-semantic-ui-range';
+import { addSongFavorite, removeSongFavorite } from '@/features/Song/SongSlice';
+import { toast } from 'react-toastify';
 
 const $ = document.querySelector.bind(document);
 
@@ -24,6 +37,7 @@ function Footer() {
     let [volume, setVolume] = useState(10);
     let [oldVolume, setOldVolume] = useState(10);
     let [isSound, setIsSound] = useState(true);
+    let [isSongFavorite, setIsSongFavorite] = useState(false);
 
     let dispatch = useDispatch();
     let playlist = useSelector((state) => state.song.playlist);
@@ -33,6 +47,7 @@ function Footer() {
     let dataSong = playlist[index];
     let currentTime = $('.time-left');
     let audio = $('#audio');
+    let showPlaylist = useSelector((state) => state.song.showPlaylist);
 
     useEffect(() => {
         if (!_.isEmpty(link)) {
@@ -172,6 +187,22 @@ function Footer() {
         },
     };
 
+    let handleSongFavorite = () => {
+        if (isSongFavorite) {
+            dispatch(removeSongFavorite(dataSong.encodeId));
+            toast.error('Đã xóa bài hát khỏi thư viện');
+        } else {
+            dispatch(addSongFavorite(dataSong));
+            toast.success('Đã thêm bài hát vào thư viện');
+        }
+
+        setIsSongFavorite(!isSongFavorite);
+    };
+
+    let handleShowPlaylist = () => {
+        dispatch(setShowPlaylist());
+    };
+
     return (
         <>
             <div className="footer">
@@ -187,26 +218,26 @@ function Footer() {
                         </>
                     )}
                     <div className="icon-music">
-                        {buttonLeft &&
-                            buttonLeft.map((item, index) => {
-                                return (
-                                    <Tippy content={item.content}>
-                                        <button className="btn" key={index}>
-                                            <FontAwesomeIcon icon={item.icon} />
-                                        </button>
-                                    </Tippy>
-                                );
-                            })}
+                        <Tippy content={isSongFavorite ? 'Xóa khỏi thư viện' : 'Thêm vào thư viện'}>
+                            <button
+                                className={isSongFavorite ? 'btn btn-active' : 'btn'}
+                                onClick={() => handleSongFavorite()}
+                            >
+                                <FontAwesomeIcon icon={isSongFavorite ? faHeartSolid : faHeart} />
+                            </button>
+                        </Tippy>
                     </div>
                 </div>
                 <div className="content-center">
                     <div className="control-center">
-                        <button
-                            className={`btn btn-random ${isRandom && 'btn-active'}`}
-                            onClick={() => handleClick('random')}
-                        >
-                            <FontAwesomeIcon icon={faShuffle} />
-                        </button>
+                        <Tippy content={isRandom ? 'Tắt phát ngẫu nhiên' : 'Bật phát ngẫu nhiên'}>
+                            <button
+                                className={`btn btn-random ${isRandom && 'btn-active'}`}
+                                onClick={() => handleClick('random')}
+                            >
+                                <FontAwesomeIcon icon={faShuffle} />
+                            </button>
+                        </Tippy>
                         <button className="btn btn-prev" onClick={() => handleClick('prev')}>
                             <FontAwesomeIcon icon={faBackwardStep} />
                         </button>
@@ -220,12 +251,14 @@ function Footer() {
                         <button className="btn btn-next" onClick={() => handleClick('next')}>
                             <FontAwesomeIcon icon={faForwardStep} />
                         </button>
-                        <button
-                            className={`btn btn-repeat ${isRepeat && 'btn-active'}`}
-                            onClick={() => handleClick('repeat')}
-                        >
-                            <FontAwesomeIcon icon={faRepeat} />
-                        </button>
+                        <Tippy content={isRepeat ? 'Tắt phát lại một bài' : 'Bật phát lại một bài'}>
+                            <button
+                                className={`btn btn-repeat ${isRepeat && 'btn-active'}`}
+                                onClick={() => handleClick('repeat')}
+                            >
+                                <FontAwesomeIcon icon={faRepeat} />
+                            </button>
+                        </Tippy>
 
                         <audio id="audio" src="" onTimeUpdate={handleOnTimeUpdate} onEnded={handleOnEnded}></audio>
                     </div>
@@ -266,7 +299,7 @@ function Footer() {
 
                     <div className="list-music">
                         <Tippy content="Danh sách phát">
-                            <button className="btn">
+                            <button className={`btn ${showPlaylist ? 'btn-active' : ''}`} onClick={handleShowPlaylist}>
                                 <FontAwesomeIcon icon={faList} />
                             </button>
                         </Tippy>
@@ -277,4 +310,4 @@ function Footer() {
     );
 }
 
-export default Footer;
+export default memo(Footer);

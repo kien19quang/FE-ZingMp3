@@ -6,6 +6,7 @@ import Gallery from '@/components/Gallery/Gallery';
 import Carousel from '@/components/Carousel/Carousel';
 import LineChart from '@/components/Chart/LineChart';
 import { getHomePage } from '@/services/HomeService';
+import _ from 'lodash';
 
 const cx = classNames.bind(styles);
 
@@ -23,15 +24,40 @@ function Home() {
             let homePage2 = await getHomePage(2);
             let homePage3 = await getHomePage(3);
 
-            if (homePage1.err === 0 && homePage2.err === 0) {
-                setBannerSlider(homePage1.data.items[0].items);
-                setPlaylistSlider([homePage1.data.items[3], homePage1.data.items[4], homePage2.data.items[1]]);
-            }
-            if (homePage3.err === 0) {
-                setChart(homePage3.data.items[0]);
-                setWeekTop(homePage3.data.items[1].items);
-                setSingers(homePage3.data.items[2].items);
-                setTop100(homePage3.data.items[3]);
+            if (homePage1.err === 0 && homePage2.err === 0 && homePage3.err === 0) {
+                let HomePageItems = [...homePage1.data.items, ...homePage2.data.items, ...homePage3.data.items];
+                let arrBanner = [];
+                let arrPlaylist = [];
+                let itemChart = {};
+                let arrWeekTop = [];
+                let arrSinger = [];
+                let itemTop100 = {};
+                HomePageItems.forEach((item) => {
+                    if (item.sectionType === 'banner') {
+                        arrBanner = item.items;
+                    }
+                    if (item.sectionType === 'playlist' && item.title !== 'Top 100') {
+                        arrPlaylist.push(item);
+                    }
+                    if (item.sectionType === 'RTChart') {
+                        itemChart = { ...item };
+                    }
+                    if (item.sectionType === 'weekChart') {
+                        arrWeekTop = item.items;
+                    }
+                    if (item.sectionType === 'artistSpotlight') {
+                        arrSinger = item.items;
+                    }
+                    if (item.sectionType === 'playlist' && item.title === 'Top 100') {
+                        itemTop100 = { ...item };
+                    }
+                });
+                setBannerSlider(arrBanner);
+                setPlaylistSlider(arrPlaylist);
+                setChart(itemChart);
+                setWeekTop(arrWeekTop);
+                setSingers(arrSinger);
+                setTop100(itemTop100);
             }
         };
 
@@ -40,12 +66,12 @@ function Home() {
 
     return (
         <div className={cx('wrapper')}>
-            <Gallery bannerSlider={bannerSlider ? bannerSlider : {}} />
+            <Gallery bannerSlider={bannerSlider} />
             {playlistSlider &&
                 playlistSlider.map((item) => {
                     return <Carousel title={item.title} playlistSlider={item.items} />;
                 })}
-            {chart.chart && <LineChart chart={chart.chart} items={chart.items} />}
+            {!_.isEmpty(chart) && chart.chart && <LineChart chart={chart.chart} items={chart.items} />}
 
             {weekTop && <Carousel type="large" weekTop={weekTop} />}
             {singers && <Gallery type="rounded" singers={singers} />}
