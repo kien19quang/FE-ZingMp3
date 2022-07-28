@@ -3,7 +3,7 @@ import styles from './WeekChart.modulo.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faMinus, faMusic, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
@@ -11,35 +11,23 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
 import { addSongFavorite, removeSongFavorite } from '@/features/Song/SongSlice';
+import { apiAddSongFavorite, apiDeleteSongFavorite } from '@/services/SongFavorite';
+import { useNavigate } from 'react-router';
 
 const cx = classNames.bind(styles);
 
 function WeekChart({ data, type = 'music', styleActive = 'default' }) {
     let [hover, setHover] = useState(false);
     let [pos, setPos] = useState(null);
-    let [listFavorite, setListFavorite] = useState([]);
     let playlistFavorite = useSelector((state) => state.song.playlistFavorite);
-
+    let navigate = useNavigate();
     let dispatch = useDispatch();
     let indexSong = useSelector((state) => state.song.index);
     let playlist = useSelector((state) => state.song.playlist);
     let dataSong = playlist[indexSong];
+    let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-    useEffect(() => {
-        let arrFavoriteSong = [];
-
-        if (playlistFavorite.length > 0 && data.length > 0) {
-            for (let i = 0; i < playlistFavorite.length; i++) {
-                for (let j = 0; j < data.length; j++) {
-                    if (playlistFavorite[i].encodeId === data[j].encodeId) {
-                        arrFavoriteSong.push(j);
-                    }
-                }
-            }
-        }
-
-        setListFavorite(arrFavoriteSong);
-    }, [data, playlistFavorite]);
+    let userData = useSelector((state) => state.user.userData);
 
     let handleTime = (secondsTotal) => {
         let hour = Math.floor(secondsTotal / 3600) === 0 ? '' : Math.floor(secondsTotal / 3600) + ':';
@@ -77,22 +65,26 @@ function WeekChart({ data, type = 'music', styleActive = 'default' }) {
         dispatch(updatePlay(true));
     };
 
-    let handleAddSongFavorite = (item, index) => {
-        setListFavorite([...listFavorite, index]);
-        dispatch(addSongFavorite(item));
-        toast.success('Đã thêm bài hát vào thư viện');
+    let handleAddSongFavorite = async (item) => {
+        if (!isLoggedIn) {
+            navigate('/login');
+        } else {
+            await apiAddSongFavorite({
+                encodeId: item.encodeId,
+                userId: userData.id,
+                thumbnailM: item.thumbnailM,
+                artistsNames: item.artistsNames,
+                title: item.title,
+                albumTitle: item.album.title || '',
+                duration: item.duration,
+            });
+            dispatch(addSongFavorite(item));
+            toast.success('Đã thêm bài hát vào thư viện');
+        }
     };
 
-    let handleRemoveSongFavorite = (item, index) => {
-        if (listFavorite.length > 0) {
-            let copyListFavorite = [];
-            listFavorite.forEach((item) => {
-                if (item !== index) {
-                    copyListFavorite.push(item);
-                }
-            });
-            setListFavorite(copyListFavorite);
-        }
+    let handleRemoveSongFavorite = async (item) => {
+        await apiDeleteSongFavorite(item.encodeId);
         dispatch(removeSongFavorite(item.encodeId));
         toast.error('Đã xóa bài hát khỏi thư viện');
     };
@@ -154,7 +146,7 @@ function WeekChart({ data, type = 'music', styleActive = 'default' }) {
 
                                         {hover && index === pos && (
                                             <div className={cx('hover-item')}>
-                                                {!listFavorite.includes(index) ? (
+                                                {!playlistFavorite?.some((i) => i.encodeId === item.encodeId) ? (
                                                     <Tippy content="Thêm vào thư viện">
                                                         <button
                                                             className={cx('btn')}

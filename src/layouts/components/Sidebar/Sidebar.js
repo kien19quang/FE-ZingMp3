@@ -2,25 +2,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { selectionMain, sectionAdd } from './Selection';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import './Sidebar.scss';
+import _ from 'lodash';
 
 function Sidebar() {
     let pathName = window.location.pathname;
 
-    let handleSelection = (e) => {
-        let elementActive = document.querySelector('.active');
-        elementActive.classList.remove('active');
-        if (e.target.nodeName === 'SPAN') {
-            e.target.parentNode.classList.add('active');
-        } else {
-            e.target.classList.add('active');
-        }
-    };
+    let playlist = useSelector((state) => state.song.playlist);
 
     return (
         <>
-            <div className="Sidebar">
+            <div className={`Sidebar ${playlist.length === 0 && 'full'}`}>
                 <Link to={'/'} className="logo-mp3">
                     {' '}
                 </Link>
@@ -33,13 +26,7 @@ function Sidebar() {
                             }
 
                             return (
-                                <Link
-                                    className={`select ${nameClass}`}
-                                    key={index}
-                                    title={item.value}
-                                    onClick={(e) => handleSelection(e)}
-                                    to={item.to}
-                                >
+                                <Link className={`select ${nameClass}`} key={index} title={item.value} to={item.to}>
                                     <FontAwesomeIcon icon={item.icon} />
                                     <span>{item.value}</span>
                                 </Link>
@@ -57,13 +44,7 @@ function Sidebar() {
                                 nameClass = 'active';
                             }
                             return (
-                                <Link
-                                    to={item.to}
-                                    className={`select ${nameClass}`}
-                                    key={index}
-                                    title={item.value}
-                                    onClick={(e) => handleSelection(e)}
-                                >
+                                <Link to={item.to} className={`select ${nameClass}`} key={index} title={item.value}>
                                     <FontAwesomeIcon icon={item.icon} />
                                     <span>{item.value}</span>
                                 </Link>
@@ -116,4 +97,4 @@ function Sidebar() {
     );
 }
 
-export default memo(Sidebar);
+export default Sidebar;

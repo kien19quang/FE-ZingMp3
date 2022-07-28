@@ -4,17 +4,57 @@ import Playlists from '../components/Playlists/Playlists';
 import Footer from '../components/Footer/Footer';
 import classNames from 'classnames/bind';
 import styles from './DefaultLayout.module.scss';
+import { useSelector, useDispatch } from 'react-redux';
+import { apiGetOneUser } from '@/services/UserService';
+import { useEffect } from 'react';
+import { setUserData } from '@/features/Authen/AuthSlice';
+import { setPlaylistSongFavorite } from '@/features/Song/SongSlice';
+import { apiGetAllSongFavorite } from '@/services/SongFavorite';
+import _ from 'lodash';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
+    let dispatch = useDispatch();
+
+    let userInfor = useSelector((state) => state.user.userInfor);
+    let playlist = useSelector((state) => state.song.playlist);
+    let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+    useEffect(() => {
+        let getUserInfor = async () => {
+            let response = await apiGetOneUser(JSON.parse(userInfor));
+
+            if (response.errCode === 0) {
+                dispatch(setUserData(response.userInfor));
+            }
+        };
+        if (isLoggedIn) {
+            getUserInfor();
+        }
+    }, [userInfor, dispatch, isLoggedIn]);
+
+    useEffect(() => {
+        let getAllSongFavorite = async () => {
+            let response = await apiGetAllSongFavorite(JSON.parse(userInfor));
+
+            if (response.errCode === 0) {
+                dispatch(setPlaylistSongFavorite(response.data));
+            }
+        };
+
+        if (isLoggedIn) {
+            getAllSongFavorite();
+        }
+    }, [userInfor, dispatch, isLoggedIn]);
+
     return (
         <>
             <div className={cx('wrapper')}>
                 <div className={cx('wrapper-up')}>
                     <Sidebar />
 
-                    <div className={cx('container-right')}>
+                    <div className={cx('container-right', `${playlist.length === 0 && 'full'}`)}>
                         <Header />
                         <div className={cx('content')}>{children}</div>
                     </div>
@@ -22,9 +62,7 @@ function DefaultLayout({ children }) {
                     <Playlists />
                 </div>
 
-                <div className={cx('wrapper-down')}>
-                    <Footer />
-                </div>
+                <div className={cx('wrapper-down')}>{playlist.length !== 0 && <Footer />}</div>
             </div>
         </>
     );

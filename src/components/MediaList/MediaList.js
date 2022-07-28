@@ -3,7 +3,6 @@ import styles from './MediaList.modulo.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faList, faMinus, faMusic, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     updatePlaylist,
@@ -17,47 +16,21 @@ import { getSong } from '@/services/SongService';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
+import { apiAddSongFavorite, apiDeleteSongFavorite } from '@/services/SongFavorite';
+import { useNavigate } from 'react-router';
+import _ from 'lodash';
 
 const cx = classNames.bind(styles);
 
 function MediaList({ data = [], playlist = [], type = 'music', showHeader = true }) {
     let dispatch = useDispatch();
+    let navigate = useNavigate();
     let playlistFavorite = useSelector((state) => state.song.playlistFavorite);
     let index = useSelector((state) => state.song.index);
     let playlistSong = useSelector((state) => state.song.playlist);
     let dataSong = playlistSong[index];
-    //let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
-    console.log('re-render');
-
-    let [listFavorite, setListFavorite] = useState([]);
-    let [indexSong, setIndexSong] = useState(null);
-
-    //useEffect(() => {
-    //    let arrFavoriteSong = [];
-
-    //    if (playlistFavorite.length > 0 && data.length > 0) {
-    //        for (let i = 0; i < playlistFavorite.length; i++) {
-    //            for (let j = 0; j < data.length; j++) {
-    //                if (playlistFavorite[i].encodeId === data[j].encodeId) {
-    //                    arrFavoriteSong.push(j);
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    setListFavorite(arrFavoriteSong);
-    //}, [data, playlistFavorite]);
-
-    useEffect(() => {
-        if (data && data.length > 0) {
-            data.forEach((item, index) => {
-                if (item.encodeId === dataSong.encodeId) {
-                    setIndexSong(index);
-                }
-            });
-        }
-    }, [data, dataSong.encodeId]);
+    let userData = useSelector((state) => state.user.userData);
+    let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     let handleTime = (secondsTotal) => {
         let hour = Math.floor(secondsTotal / 3600) === 0 ? '' : Math.floor(secondsTotal / 3600) + ':';
@@ -85,22 +58,26 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
         dispatch(updatePlay(true));
     };
 
-    let handleAddSongFavorite = (item, index) => {
-        setListFavorite([...listFavorite, index]);
-        dispatch(addSongFavorite(item));
-        toast.success('Đã thêm bài hát vào thư viện');
+    let handleAddSongFavorite = async (item) => {
+        if (!isLoggedIn) {
+            navigate('/login');
+        } else {
+            await apiAddSongFavorite({
+                encodeId: item.encodeId,
+                userId: userData.id,
+                thumbnailM: item.thumbnailM,
+                artistsNames: item.artistsNames,
+                title: item.title,
+                albumTitle: item.album.title || '',
+                duration: item.duration,
+            });
+            dispatch(addSongFavorite(item));
+            toast.success('Đã thêm bài hát vào thư viện');
+        }
     };
 
-    let handleRemoveSongFavorite = (item, index) => {
-        if (listFavorite.length > 0) {
-            let copyListFavorite = [];
-            listFavorite.forEach((item) => {
-                if (item !== index) {
-                    copyListFavorite.push(item);
-                }
-            });
-            setListFavorite(copyListFavorite);
-        }
+    let handleRemoveSongFavorite = async (item) => {
+        await apiDeleteSongFavorite(item.encodeId);
         dispatch(removeSongFavorite(item.encodeId));
         toast.error('Đã xóa bài hát khỏi thư viện');
     };
@@ -136,12 +113,12 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
                             nameClass = `number-rank-${index + 1}`;
                         }
 
-                        if (indexSong === index) {
+                        if (!_.isEmpty(dataSong) && dataSong.encodeId && item.encodeId === dataSong.encodeId) {
                             isActive = 'is-active';
                         }
 
                         return (
-                            <div className={cx('select-item', `${isActive}`)}>
+                            <div className={`select-item ${isActive}`}>
                                 <div className={cx('media-left')} onClick={() => handlePlaySong(item, index)}>
                                     {type === 'music' ? (
                                         <FontAwesomeIcon icon={faMusic} />
@@ -163,7 +140,7 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
                                 <div className={cx('media-right')}>
                                     <div className="media-right-item">
                                         <div className={cx('hover-item')}>
-                                            {!listFavorite.includes(index) ? (
+                                            {!playlistFavorite?.some((i) => i.encodeId === item.encodeId) ? (
                                                 <Tippy content="Thêm vào thư viện">
                                                     <button
                                                         className={cx('btn')}

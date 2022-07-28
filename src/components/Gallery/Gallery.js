@@ -3,8 +3,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-
 import classNames from 'classnames/bind';
 import styles from './Gallery.modulo.scss';
 import { getSongInfo, getSong } from '@/services/SongService';
@@ -14,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function Gallery({ bannerSlider, singers, type = 'primary' }) {
+function Gallery({ bannerSlider, singers = [], type = 'primary' }) {
     let show = type === 'primary' ? 3 : 7;
     let dispatch = useDispatch();
     let navigate = useNavigate();
@@ -57,6 +55,14 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
         }
     };
 
+    let handleToSinger = (item) => {
+        if (item.link.split('/')[1] === 'nghe-si') {
+            navigate(item.link.split('/')[2]);
+        } else {
+            navigate(item.link);
+        }
+    };
+
     return (
         <>
             <Slider {...settings} className={cx('slide-banner', { [type]: type })}>
@@ -71,25 +77,30 @@ function Gallery({ bannerSlider, singers, type = 'primary' }) {
                         );
                     })}
 
-                {singers &&
+                {singers.length > 0 &&
                     singers.map((item) => {
                         return (
                             <div className={cx('gallery-wrapper')} key={item.encodeId}>
-                                <Link className={cx('gallery-item')} to={item.link}>
+                                <div
+                                    className={cx('gallery-item')}
+                                    onClick={() => {
+                                        handleToSinger(item);
+                                    }}
+                                >
                                     <img
                                         src={item.thumbnail}
                                         alt={item.name}
                                         className={cx('img-gallery-item', { [type]: type })}
                                     />
-                                </Link>
+                                </div>
 
-                                <Link className={cx('infor-singer')} to={item.link}>
+                                <div className={cx('infor-singer')} to={item.name}>
                                     <span className={cx('name-singer')}>{item.name}</span>
                                     <span className={cx('number-favorites')}>
                                         <FontAwesomeIcon icon={faHeart} className={cx('icon-tym')} />
                                         {item.totalFollow ? handleNumberFarorites(item.totalFollow) : 0}
                                     </span>
-                                </Link>
+                                </div>
                             </div>
                         );
                     })}

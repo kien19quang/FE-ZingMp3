@@ -4,12 +4,15 @@
     position: sticky;
 
     .wrapper-up {
-        height: calc(100vh - 90px);
         .container-right {
             display: flex;
             flex-direction: column;
             margin-left: 240px;
             height: calc(100vh - 90px);
+
+            &.full {
+                height: 100vh;
+            }
 
             .content {
                 width: 100%;

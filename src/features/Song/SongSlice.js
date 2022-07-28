@@ -53,6 +53,10 @@ export const songSlice = createSlice({
             return { ...state, playlistFavorite: copyPlayListFavorite };
         },
 
+        setPlaylistSongFavorite: (state, action) => {
+            return { ...state, playlistFavorite: action.payload };
+        },
+
         setShowPlaylist: (state) => {
             return { ...state, showPlaylist: !state.showPlaylist };
         },
@@ -75,6 +79,7 @@ export const {
     addSongFavorite,
     removeSongFavorite,
     setShowPlaylist,
+    setPlaylistSongFavorite,
 } = songSlice.actions;
 
 export default songSlice.reducer;

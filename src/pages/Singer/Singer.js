@@ -22,6 +22,7 @@ function Singer() {
     let [isOpen, setIsOpen] = useState(false);
 
     let params = useParams();
+    console.log(params);
     let artist = params.singerName;
     let tab = params.tab ? params.tab : '';
     let NavbarList = [

@@ -32,7 +32,7 @@
     flex-wrap: wrap;
 
     &.primary {
-        gap: 28px;
+        gap: 24px;
     }
 
     &.large {
@@ -43,6 +43,9 @@
 
 .carousel-item {
     width: 18%;
+    min-width: 206px;
+    max-width: 208px;
+    flex: 1;
     overflow: hidden;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -51,6 +54,7 @@
 .carousel-item.large {
     width: 32%;
     height: 100px;
+    max-width: none;
 }
 
 .img-item-wrapper {

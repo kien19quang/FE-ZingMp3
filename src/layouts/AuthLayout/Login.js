@@ -5,6 +5,7 @@ import { apiLogin, apiRegister } from '@/services/AuthService';
 import Swal from 'sweetalert2';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn, setAccessToken } from '@/features/Authen/AuthSlice';
+import { useNavigate } from 'react-router';
 
 function Login() {
     let [userInfor, setUserInfor] = useState({
@@ -13,6 +14,8 @@ function Login() {
         email: '',
         password: '',
     });
+
+    let navigate = useNavigate();
 
     let dispatch = useDispatch();
 
@@ -29,7 +32,6 @@ function Login() {
 
     let handleSubmitLogin = async () => {
         let resultValidateFields = validateFields(['email', 'password']);
-        console.log(resultValidateFields);
         if (!resultValidateFields[0]) {
             Swal.fire({
                 title: 'Oops!',
@@ -49,12 +51,12 @@ function Login() {
                 email: userInfor.email,
                 password: userInfor.password,
             });
-            console.log(response);
 
             if (response && response.errCode === 0) {
                 let userInfor = JSON.stringify(response.token);
                 dispatch(setAccessToken(userInfor));
                 dispatch(setIsLoggedIn());
+                navigate(-1);
             } else {
                 Swal.fire({
                     title: 'Oops!',
@@ -114,7 +116,7 @@ function Login() {
 
     let handleEnterSubmit = (event) => {
         if (event.code === 'Enter') {
-            this.handleSubmitLogin();
+            handleSubmitLogin();
         }
     };
 

@@ -4,9 +4,11 @@ import styles from './Header.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight, faGear, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import AvatarUser from '@/assets/images/Avatar-user.jpg';
+import AvatarDefault from '@/assets/images/Avatar-default.jpg';
 import { Wrapper as PopperWrapper } from '@/components/Popper';
 import Setting from './Setting';
 import UserUntil from './UserUntil';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
@@ -19,6 +21,7 @@ function Header() {
             window.history.forward();
         }
     };
+    let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     return (
         <>
@@ -75,7 +78,7 @@ function Header() {
                         )}
                     >
                         <button className={cx('btn')}>
-                            <img src={AvatarUser} alt="" className={cx('avatar-user')} />
+                            <img src={isLoggedIn ? AvatarUser : AvatarDefault} alt="" className={cx('avatar-user')} />
                         </button>
                     </Tippy>
                 </div>

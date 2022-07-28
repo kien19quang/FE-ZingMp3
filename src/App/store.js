@@ -14,7 +14,7 @@ const persistCommonConfig = {
 const songPersistConfig = {
     ...persistCommonConfig,
     key: 'song',
-    whitelist: ['index', 'playlist', 'linkSong', 'playlistFavorite'],
+    whitelist: ['index', 'playlist', 'linkSong'],
 };
 
 const userPersistConfig = {

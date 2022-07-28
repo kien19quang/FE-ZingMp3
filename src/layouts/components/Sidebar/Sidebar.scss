@@ -37,6 +37,10 @@
     position: fixed;
     top: 0;
 
+    &.full {
+        height: 100vh;
+    }
+
     .logo-mp3 {
         width: 120px;
         height: 70px;

@@ -7,6 +7,7 @@ import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { getDetailAlbum } from '@/services/AlbumService';
 import moment from 'moment';
 import MediaList from '@/components/MediaList/MediaList';
+import _ from 'lodash';
 
 const cx = classNames.bind(styles);
 
@@ -75,7 +76,7 @@ function Album() {
     return (
         <>
             <div className={cx('wrapper-album')}>
-                {data && (
+                {!_.isEmpty(data) && (
                     <>
                         <div className={cx('content-left')}>
                             <div
