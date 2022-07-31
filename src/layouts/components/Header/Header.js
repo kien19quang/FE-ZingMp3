@@ -2,13 +2,14 @@ import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react/headless';
 import styles from './Header.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight, faGear, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faGear } from '@fortawesome/free-solid-svg-icons';
 import AvatarUser from '@/assets/images/Avatar-user.jpg';
 import AvatarDefault from '@/assets/images/Avatar-default.jpg';
 import { Wrapper as PopperWrapper } from '@/components/Popper';
 import Setting from './Setting';
 import UserUntil from './UserUntil';
 import { useSelector } from 'react-redux';
+import Search from '../Search/Search';
 
 const cx = classNames.bind(styles);
 
@@ -41,10 +42,7 @@ function Header() {
                             <FontAwesomeIcon icon={faArrowRight} />
                         </button>
                     </div>
-                    <div className={cx('search')}>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} className={cx('icon-search')} />
-                        <input type="text" placeholder="Nhập tên bài hát, nghệ sĩ hoặc MV..." />
-                    </div>
+                    <Search />
                 </div>
 
                 <div className={cx('nav-right')}>

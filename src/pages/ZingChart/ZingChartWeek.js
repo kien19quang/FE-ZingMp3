@@ -7,6 +7,8 @@ import MediaList from '@/components/MediaList/MediaList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 
 const cx = classNames.bind(styles);
 
@@ -16,18 +18,21 @@ function ZingChartWeek() {
 
     let params = useParams();
     let slug = params.slug.slice(8);
+    let dispatch = useDispatch();
 
     useEffect(() => {
         const getChartHome = async () => {
+            dispatch(setIsLoading(true));
             let res = await getChartHomeAPI();
 
             if (res.err === 0) {
                 setWeekChart(res.data.weekChart);
+                dispatch(setIsLoading(false));
             }
         };
 
         getChartHome();
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (slug === 'US-UK') {

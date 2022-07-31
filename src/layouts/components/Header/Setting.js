@@ -10,7 +10,7 @@ function Setting() {
         <div className={cx('wrapper')}>
             <ul className={cx('menu-item')}>
                 {listItemMain &&
-                    listItemMain.map((item, index) => {
+                    listItemMain.map((item) => {
                         return (
                             <li>
                                 <FontAwesomeIcon icon={item.icon} className={cx('icon')} />

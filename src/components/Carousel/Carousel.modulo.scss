@@ -32,7 +32,7 @@
     flex-wrap: wrap;
 
     &.primary {
-        gap: 24px;
+        gap: 20px;
     }
 
     &.large {
@@ -111,5 +111,18 @@
         white-space: nowrap;
         overflow: hidden;
         width: 100%;
+    }
+}
+
+.img-artist {
+    border-radius: 50%;
+}
+
+.artist {
+    margin-top: 16px;
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { setUserData } from '@/features/Authen/AuthSlice';
 import { setPlaylistSongFavorite } from '@/features/Song/SongSlice';
 import { apiGetAllSongFavorite } from '@/services/SongFavorite';
-import _ from 'lodash';
+import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader';
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +20,7 @@ function DefaultLayout({ children }) {
     let userInfor = useSelector((state) => state.user.userInfor);
     let playlist = useSelector((state) => state.song.playlist);
     let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    let isLoading = useSelector((state) => state.song.isLoading);
 
     useEffect(() => {
         let getUserInfor = async () => {
@@ -64,6 +65,12 @@ function DefaultLayout({ children }) {
 
                 <div className={cx('wrapper-down')}>{playlist.length !== 0 && <Footer />}</div>
             </div>
+
+            {isLoading && (
+                <div className={cx('loading-container')}>
+                    <ClimbingBoxLoader color={'#964B8A'} loading={true} size={25} />
+                </div>
+            )}
         </>
     );
 }

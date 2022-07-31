@@ -6,6 +6,8 @@ import Gallery from '@/components/Gallery/Gallery';
 import Carousel from '@/components/Carousel/Carousel';
 import LineChart from '@/components/Chart/LineChart';
 import { getHomePage } from '@/services/HomeService';
+import { useDispatch } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 import _ from 'lodash';
 
 const cx = classNames.bind(styles);
@@ -18,8 +20,11 @@ function Home() {
     let [top100, setTop100] = useState({});
     let [chart, setChart] = useState({});
 
+    let dispatch = useDispatch();
+
     useEffect(() => {
         const getAllHomePage = async () => {
+            dispatch(setIsLoading(true));
             let homePage1 = await getHomePage(1);
             let homePage2 = await getHomePage(2);
             let homePage3 = await getHomePage(3);
@@ -58,11 +63,12 @@ function Home() {
                 setWeekTop(arrWeekTop);
                 setSingers(arrSinger);
                 setTop100(itemTop100);
+                dispatch(setIsLoading(false));
             }
         };
 
         getAllHomePage();
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className={cx('wrapper')}>

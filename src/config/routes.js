@@ -6,7 +6,8 @@ const routes = {
     zingchart: '/zing-chart',
     zingchartWeek: '/zing-chart-tuan/:slug/:id',
     newReleaseChart: '/moi-phat-hanh',
-    singerName: '/:singerName/',
+    pageSearch: '/tim-kiem/:tab',
+    singerName: '/:singerName',
     singerTab: '/:singerName/:tab',
     myMusic: '/mymusic',
 };

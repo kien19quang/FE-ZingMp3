@@ -33,6 +33,7 @@
         "react-scripts": "5.0.1",
         "react-semantic-ui-range": "^0.7.1",
         "react-slick": "^0.29.0",
+        "react-spinners": "^0.13.3",
         "react-toastify": "^9.0.7",
         "reactstrap": "^9.1.1",
         "redux-persist": "^6.0.0",

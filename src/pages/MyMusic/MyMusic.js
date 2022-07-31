@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 function MyMusic() {
     let playlistFavorite = useSelector((state) => state.song.playlistFavorite);
     let userData = useSelector((state) => state.user.userData);
-    console.log(userData);
 
     return (
         <div className="mymusic-wrapper">

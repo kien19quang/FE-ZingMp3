@@ -11,6 +11,8 @@ import { Line } from 'react-chartjs-2';
 import _ from 'lodash';
 import WeekChart from '@/components/WeekChart/WeekChart';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 
 const cx = classNames.bind(styles);
 Chart.register(...registerables);
@@ -20,6 +22,7 @@ function ZingChart() {
     let [weekChart, setWeekChart] = useState({});
     let [items, setItems] = useState([]);
     let [showTop100, setShowTop100] = useState(false);
+    let dispatch = useDispatch();
 
     let labels = [];
     let counter1 = [];
@@ -30,17 +33,20 @@ function ZingChart() {
 
     useEffect(() => {
         const getChartHome = async () => {
+            dispatch(setIsLoading(true));
+
             let res = await getChartHomeAPI();
 
             if (res.err === 0) {
                 setItems(res.data.RTChart.items);
                 setChart(res.data.RTChart.chart);
                 setWeekChart(res.data.weekChart);
+                dispatch(setIsLoading(false));
             }
         };
 
         getChartHome();
-    }, []);
+    }, [dispatch]);
 
     let handleTimes = (times) => {
         let labels = [];

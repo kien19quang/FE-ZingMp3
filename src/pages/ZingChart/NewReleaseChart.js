@@ -5,6 +5,8 @@ import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { getNewReleaseChartAPI } from '@/services/ChartService';
 import MediaList from '@/components/MediaList/MediaList';
+import { useDispatch } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 
 const cx = classNames.bind(styles);
 
@@ -12,19 +14,23 @@ function NewReleaseChart() {
     let [newRelease, setNewRelease] = useState({});
     let [showTop100, setShowTop100] = useState(false);
 
+    let dispatch = useDispatch();
     let playlist = [];
 
     useEffect(() => {
         const getNewReleaseChart = async () => {
+            dispatch(setIsLoading(true));
+
             let res = await getNewReleaseChartAPI();
 
             if (res.err === 0) {
                 setNewRelease(res.data);
+                dispatch(setIsLoading(false));
             }
         };
 
         getNewReleaseChart();
-    }, []);
+    }, [dispatch]);
 
     let handlePlaylist = () => {
         if (newRelease.items) {

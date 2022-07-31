@@ -10,9 +10,10 @@ import { getSong } from '@/services/SongService';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
-import { addSongFavorite, removeSongFavorite } from '@/features/Song/SongSlice';
+import { addSongFavorite, removeSongFavorite, addRecentSong } from '@/features/Song/SongSlice';
 import { apiAddSongFavorite, apiDeleteSongFavorite } from '@/services/SongFavorite';
 import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2';
 
 const cx = classNames.bind(styles);
 
@@ -63,11 +64,23 @@ function WeekChart({ data, type = 'music', styleActive = 'default' }) {
         dispatch(updatePlaylist(data));
         dispatch(updateIndex(index));
         dispatch(updatePlay(true));
+        dispatch(addRecentSong(item));
     };
 
     let handleAddSongFavorite = async (item) => {
         if (!isLoggedIn) {
-            navigate('/login');
+            Swal.fire({
+                title: 'Hey, bro!',
+                text: `Bạn hãy đăng nhập để sử dụng được chức năng này ~`,
+                icon: 'warning',
+                confirmButtonText: 'Đi tới đăng nhập',
+                cancelButtonText: `Không cần`,
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/login');
+                }
+            });
         } else {
             await apiAddSongFavorite({
                 encodeId: item.encodeId,

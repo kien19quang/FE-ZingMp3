@@ -20,19 +20,27 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import HandleEvent from './HandleEvent';
 import { useEffect, useState } from 'react';
-import { updateIndex, updatePlay, updateLinkSong, setShowPlaylist } from '@/features/Song/SongSlice';
+import {
+    updateIndex,
+    updatePlay,
+    updateIsPlaying,
+    updatePauseFromAlbum,
+    updateLinkSong,
+    setShowPlaylist,
+} from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
 import { Slider } from 'react-semantic-ui-range';
-import { addSongFavorite, removeSongFavorite } from '@/features/Song/SongSlice';
+import { addSongFavorite, removeSongFavorite, setIsRandom, setIsRepeat } from '@/features/Song/SongSlice';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
+import { apiAddSongFavorite, apiDeleteSongFavorite } from '@/services/SongFavorite';
+import Swal from 'sweetalert2';
 
 const $ = document.querySelector.bind(document);
 
 function Footer() {
     let [isPlay, setIsPlay] = useState(false);
     let [linkSong, setLinkSong] = useState({});
-    let [isRandom, setIsRandom] = useState(false);
-    let [isRepeat, setIsRepeat] = useState(false);
     let [progressPercent, setProgressPercent] = useState(1);
     let [volume, setVolume] = useState(10);
     let [oldVolume, setOldVolume] = useState(10);
@@ -43,11 +51,16 @@ function Footer() {
     let playlist = useSelector((state) => state.song.playlist);
     let index = useSelector((state) => state.song.index);
     let playMusic = useSelector((state) => state.song.play);
+    let pauseFromAlbum = useSelector((state) => state.song.pauseFromAlbum);
     let link = useSelector((state) => state.song.linkSong);
     let dataSong = playlist[index];
     let currentTime = $('.time-left');
     let audio = $('#audio');
     let showPlaylist = useSelector((state) => state.song.showPlaylist);
+    let isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    let navigate = useNavigate();
+    let isRandom = useSelector((state) => state.song.isRandom);
+    let isRepeat = useSelector((state) => state.song.isRepeat);
 
     useEffect(() => {
         if (!_.isEmpty(link)) {
@@ -66,9 +79,28 @@ function Footer() {
 
     handlePlayMusic();
 
-    let handleClick = async (type, e) => {
+    useEffect(() => {
+        let handlePlayFromAlbum = () => {
+            if (pauseFromAlbum && !_.isEmpty(linkSong) && !_.isEmpty(audio)) {
+                HandleEvent.play(link, audio, true, audio.currentTime);
+                dispatch(updatePauseFromAlbum(false));
+                dispatch(updateIsPlaying(false));
+                setIsPlay(false);
+            }
+        };
+
+        handlePlayFromAlbum();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pauseFromAlbum]);
+
+    let handleClick = async (type) => {
         if (type === 'play') {
             HandleEvent.play(linkSong, audio, isPlay, audio.currentTime);
+            if (!isPlay) {
+                dispatch(updateIsPlaying(true));
+            } else if (isPlay) {
+                dispatch(updateIsPlaying(false));
+            }
             setIsPlay(!isPlay);
         } else if (type === 'next') {
             if (!isRandom) {
@@ -111,9 +143,9 @@ function Footer() {
             dispatch(updateIndex(index));
             dispatch(updatePlay(true));
         } else if (type === 'random') {
-            setIsRandom(!isRandom);
+            dispatch(setIsRandom());
         } else if (type === 'repeat') {
-            setIsRepeat(!isRepeat);
+            dispatch(setIsRepeat());
         }
     };
 
@@ -187,16 +219,41 @@ function Footer() {
         },
     };
 
-    let handleSongFavorite = () => {
+    let handleSongFavorite = async () => {
         if (isSongFavorite) {
+            await apiDeleteSongFavorite(dataSong.encodeId);
             dispatch(removeSongFavorite(dataSong.encodeId));
             toast.error('Đã xóa bài hát khỏi thư viện');
+            setIsSongFavorite(!isSongFavorite);
         } else {
-            dispatch(addSongFavorite(dataSong));
-            toast.success('Đã thêm bài hát vào thư viện');
+            if (!isLoggedIn) {
+                Swal.fire({
+                    title: 'Hey, bro!',
+                    text: `Bạn hãy đăng nhập để sử dụng được chức năng này ~`,
+                    icon: 'warning',
+                    confirmButtonText: 'Đi tới đăng nhập',
+                    cancelButtonText: `Không cần`,
+                    showCancelButton: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate('/login');
+                    }
+                });
+            } else {
+                await apiAddSongFavorite({
+                    encodeId: dataSong.encodeId,
+                    userId: dataSong.id,
+                    thumbnailM: dataSong.thumbnailM,
+                    artistsNames: dataSong.artistsNames,
+                    title: dataSong.title,
+                    albumTitle: dataSong.album.title || '',
+                    duration: dataSong.duration,
+                });
+                dispatch(addSongFavorite(dataSong));
+                toast.success('Đã thêm bài hát vào thư viện');
+                setIsSongFavorite(!isSongFavorite);
+            }
         }
-
-        setIsSongFavorite(!isSongFavorite);
     };
 
     let handleShowPlaylist = () => {

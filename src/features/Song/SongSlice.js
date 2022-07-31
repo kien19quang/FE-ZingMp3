@@ -6,8 +6,14 @@ let initialState = {
     playlist: [],
     linkSong: {},
     play: false,
+    isPlaying: false,
+    pauseFromAlbum: false,
     playlistFavorite: [],
+    recentSongs: [],
     showPlaylist: false,
+    isLoading: false,
+    isRandom: false,
+    isRepeat: false,
 };
 
 export const fetchSong = createAsyncThunk('song/getSong', async (songId) => {
@@ -32,6 +38,14 @@ export const songSlice = createSlice({
 
         updatePlay: (state, action) => {
             return { ...state, play: action.payload };
+        },
+
+        updateIsPlaying: (state, action) => {
+            return { ...state, isPlaying: action.payload };
+        },
+
+        updatePauseFromAlbum: (state, action) => {
+            return { ...state, pauseFromAlbum: action.payload };
         },
 
         updateLinkSong: (state, action) => {
@@ -60,6 +74,29 @@ export const songSlice = createSlice({
         setShowPlaylist: (state) => {
             return { ...state, showPlaylist: !state.showPlaylist };
         },
+
+        setIsLoading: (state, action) => {
+            return { ...state, isLoading: action.payload };
+        },
+
+        addRecentSong: (state, action) => {
+            let copyRecentSongs = [...state.recentSongs];
+            if (copyRecentSongs.length === 40) {
+                copyRecentSongs.shift();
+            }
+            copyRecentSongs = copyRecentSongs.filter((item) => item.encodeId !== action.payload.encodeId);
+            copyRecentSongs.push(action.payload);
+            copyRecentSongs.reverse();
+            return { ...state, recentSongs: copyRecentSongs };
+        },
+
+        setIsRandom: (state, action) => {
+            return { ...state, isRandom: !state.isRandom };
+        },
+
+        setIsRepeat: (state, action) => {
+            return { ...state, isRepeat: !state.isRepeat };
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSong.fulfilled, (state, action) => {
@@ -75,11 +112,17 @@ export const {
     updateIndex,
     updatePlaylist,
     updatePlay,
+    updateIsPlaying,
+    updatePauseFromAlbum,
     updateLinkSong,
     addSongFavorite,
     removeSongFavorite,
     setShowPlaylist,
     setPlaylistSongFavorite,
+    setIsLoading,
+    addRecentSong,
+    setIsRandom,
+    setIsRepeat,
 } = songSlice.actions;
 
 export default songSlice.reducer;

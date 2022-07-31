@@ -11,6 +11,8 @@ import SingleEP from './SingleEP';
 import Carousel from '@/components/Carousel/Carousel';
 import { Link } from 'react-router-dom';
 import ModalSinger from './ModalSinger';
+import { useDispatch } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 
 function Singer() {
     let [singerInfo, setSingerInfo] = useState({});
@@ -22,7 +24,7 @@ function Singer() {
     let [isOpen, setIsOpen] = useState(false);
 
     let params = useParams();
-    console.log(params);
+    let dispatch = useDispatch();
     let artist = params.singerName;
     let tab = params.tab ? params.tab : '';
     let NavbarList = [
@@ -35,6 +37,7 @@ function Singer() {
 
     useEffect(() => {
         let getArtist = async () => {
+            dispatch(setIsLoading(true));
             let res = await getArtistAPI(artist);
 
             if (res.err === 0) {
@@ -44,11 +47,12 @@ function Singer() {
                 setAlbum(res.data.sections[2]);
                 setColection(res.data.sections[4]);
                 setAppear(res.data.sections[5]);
+                dispatch(setIsLoading(false));
             }
         };
 
         getArtist();
-    }, [artist]);
+    }, [artist, dispatch]);
 
     let handleNumberFarorites = (number) => {
         let n = number / 1000;

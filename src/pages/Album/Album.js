@@ -8,33 +8,64 @@ import { getDetailAlbum } from '@/services/AlbumService';
 import moment from 'moment';
 import MediaList from '@/components/MediaList/MediaList';
 import _ from 'lodash';
+import {
+    updatePlaylist,
+    updateIndex,
+    updatePlay,
+    updateLinkSong,
+    addRecentSong,
+    updatePauseFromAlbum,
+} from '@/features/Song/SongSlice';
+import { getSong } from '@/services/SongService';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsLoading } from '@/features/Song/SongSlice';
 
 const cx = classNames.bind(styles);
 
 function Album() {
     let [play, setPlay] = useState(false);
-    let [firstTime, setFirstTime] = useState(true);
     let [data, setData] = useState({});
     let [total, setTotal] = useState('100');
     let [totalDuration, setTotalDuration] = useState('08:06:03');
 
     let params = useParams();
     let id = params.id.slice(0, 8);
-    let thump_rotate = firstTime ? 'thump-rotate' : play ? 'thump-rotate-on' : 'thump-rotate-off';
+    let thump_rotate = play ? 'thump-rotate-on' : 'thump-rotate-off';
     let timeUpdate = data ? new Date(data.contentLastUpdate * 1000) : '08/06/2003';
     timeUpdate = moment(timeUpdate).format('DD/MM/YYYY');
+    let dispatch = useDispatch();
+    let isPlaying = useSelector((state) => state.song.isPlaying);
+    let playlist = useSelector((state) => state.song.playlist);
 
     useEffect(() => {
         const getDetailAlbums = async () => {
+            dispatch(setIsLoading(true));
             let res = await getDetailAlbum(id);
 
             if (res.err === 0) {
                 setData(res.data);
+                dispatch(setIsLoading(false));
             }
         };
 
         getDetailAlbums();
-    }, [id]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, dispatch]);
+
+    useEffect(() => {
+        if (!_.isEmpty(data)) {
+            let album = data.song.items;
+            let checkEqual =
+                album.length === playlist.length &&
+                album.every((value, index) => value.encodeId === playlist[index].encodeId);
+
+            if (checkEqual && isPlaying) {
+                setPlay(true);
+            } else if (!isPlaying) {
+                setPlay(false);
+            }
+        }
+    }, [data, isPlaying, playlist]);
 
     useEffect(() => {
         let handleTotal = () => {
@@ -47,8 +78,23 @@ function Album() {
         handleTotal();
     }, [data]);
 
-    let handlePlay = () => {
-        setFirstTime(false);
+    let handlePlay = async () => {
+        if (data && data.song && data.song.items && !play) {
+            let playlist = data.song.items;
+            let newIndex = Math.floor(Math.random() * playlist.length);
+            let res = await getSong(playlist[newIndex].encodeId);
+            if (res.err === 0) {
+                dispatch(updateLinkSong(res.data));
+            }
+            dispatch(updatePlaylist(playlist));
+            dispatch(updateIndex(newIndex));
+            dispatch(updatePlay(true));
+            dispatch(addRecentSong(playlist[newIndex]));
+        }
+
+        if (play) {
+            dispatch(updatePauseFromAlbum(true));
+        }
         setPlay(!play);
     };
 
@@ -105,7 +151,7 @@ function Album() {
                                     ) : (
                                         <>
                                             <FontAwesomeIcon icon={faPlay} />
-                                            <span>Tiếp tục phát</span>
+                                            <span>Phát ngẫu nhiên</span>
                                         </>
                                     )}
                                 </div>

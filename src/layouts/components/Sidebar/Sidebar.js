@@ -4,7 +4,6 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './Sidebar.scss';
-import _ from 'lodash';
 
 function Sidebar() {
     let pathName = window.location.pathname;
