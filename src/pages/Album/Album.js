@@ -15,6 +15,7 @@ import {
     updateLinkSong,
     addRecentSong,
     updatePauseFromAlbum,
+    updateIsPlaying,
 } from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,13 +25,14 @@ const cx = classNames.bind(styles);
 
 function Album() {
     let [play, setPlay] = useState(false);
+    let [firstTime, setFirstTime] = useState(true);
     let [data, setData] = useState({});
     let [total, setTotal] = useState('100');
     let [totalDuration, setTotalDuration] = useState('08:06:03');
 
     let params = useParams();
     let id = params.id.slice(0, 8);
-    let thump_rotate = play ? 'thump-rotate-on' : 'thump-rotate-off';
+    let thump_rotate = firstTime ? 'thump-rotate' : play ? 'thump-rotate-on' : 'thump-rotate-off';
     let timeUpdate = data ? new Date(data.contentLastUpdate * 1000) : '08/06/2003';
     timeUpdate = moment(timeUpdate).format('DD/MM/YYYY');
     let dispatch = useDispatch();
@@ -60,11 +62,15 @@ function Album() {
                 album.every((value, index) => value.encodeId === playlist[index].encodeId);
 
             if (checkEqual && isPlaying) {
+                if (firstTime) {
+                    setFirstTime(false);
+                }
                 setPlay(true);
             } else if (!isPlaying) {
                 setPlay(false);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, isPlaying, playlist]);
 
     useEffect(() => {
@@ -90,10 +96,12 @@ function Album() {
             dispatch(updateIndex(newIndex));
             dispatch(updatePlay(true));
             dispatch(addRecentSong(playlist[newIndex]));
+            dispatch(updateIsPlaying(true));
         }
 
         if (play) {
             dispatch(updatePauseFromAlbum(true));
+            dispatch(updateIsPlaying(false));
         }
         setPlay(!play);
     };
