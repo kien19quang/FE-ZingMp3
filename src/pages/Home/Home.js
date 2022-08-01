@@ -26,6 +26,7 @@ function Home() {
         const getAllHomePage = async () => {
             dispatch(setIsLoading(true));
             let homePage1 = await getHomePage(1);
+            dispatch(setIsLoading(false));
             let homePage2 = await getHomePage(2);
             let homePage3 = await getHomePage(3);
 
@@ -63,7 +64,6 @@ function Home() {
                 setWeekTop(arrWeekTop);
                 setSingers(arrSinger);
                 setTop100(itemTop100);
-                dispatch(setIsLoading(false));
             }
         };
 
