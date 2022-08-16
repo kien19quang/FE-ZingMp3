@@ -12,6 +12,7 @@ import {
     addSongFavorite,
     removeSongFavorite,
     addRecentSong,
+    setIsLoading,
 } from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
 import Tippy from '@tippyjs/react';
@@ -50,9 +51,11 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
     };
 
     let handlePlaySong = async (item, index) => {
+        dispatch(setIsLoading(true));
         let res = await getSong(item.encodeId);
         if (res.err === 0) {
             dispatch(updateLinkSong(res.data));
+            dispatch(setIsLoading(false));
         }
 
         dispatch(updatePlaylist(data));
@@ -76,6 +79,7 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
                 }
             });
         } else {
+            dispatch(addSongFavorite(item));
             await apiAddSongFavorite({
                 encodeId: item.encodeId,
                 userId: userData.id,
@@ -85,14 +89,13 @@ function MediaList({ data = [], playlist = [], type = 'music', showHeader = true
                 albumTitle: item.album.title || '',
                 duration: item.duration,
             });
-            dispatch(addSongFavorite(item));
             toast.success('Đã thêm bài hát vào thư viện');
         }
     };
 
     let handleRemoveSongFavorite = async (item) => {
-        await apiDeleteSongFavorite(item.encodeId);
         dispatch(removeSongFavorite(item.encodeId));
+        await apiDeleteSongFavorite(item.encodeId);
         toast.error('Đã xóa bài hát khỏi thư viện');
     };
     return (

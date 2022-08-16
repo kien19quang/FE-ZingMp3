@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './ZingChartWeek.mudulo.scss';
 import { useEffect, useState } from 'react';
-import { getChartHomeAPI } from '@/services/ChartService';
+import { getChartHomeAPI, useGetChartHome } from '@/services/ChartService';
 import _ from 'lodash';
 import MediaList from '@/components/MediaList/MediaList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,19 +20,18 @@ function ZingChartWeek() {
     let slug = params.slug.slice(8);
     let dispatch = useDispatch();
 
+    let { chartHome } = useGetChartHome();
+
     useEffect(() => {
-        const getChartHome = async () => {
-            dispatch(setIsLoading(true));
-            let res = await getChartHomeAPI();
+        dispatch(setIsLoading(true));
 
-            if (res.err === 0) {
-                setWeekChart(res.data.weekChart);
-                dispatch(setIsLoading(false));
-            }
-        };
+        if (chartHome?.err === 0) {
+            setWeekChart(chartHome.data.weekChart);
+            dispatch(setIsLoading(false));
+        }
+    }, [dispatch, chartHome]);
 
-        getChartHome();
-    }, [dispatch]);
+    console.log('re-render');
 
     useEffect(() => {
         if (slug === 'US-UK') {

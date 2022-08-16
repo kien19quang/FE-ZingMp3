@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getArtistAPI } from '@/services/ArtistService';
+import { useGetArtist } from '@/services/ArtistService';
 import './Singer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
@@ -35,24 +35,20 @@ function Singer() {
         { value: 'MV', option: 'video', to: `/${artist}/video` },
     ];
 
+    let { Artist } = useGetArtist(artist);
+
     useEffect(() => {
-        let getArtist = async () => {
-            dispatch(setIsLoading(true));
-            let res = await getArtistAPI(artist);
-
-            if (res.err === 0) {
-                setSingerInfo(res.data);
-                setPopularSong(res.data.sections[0]);
-                setSingleEp(res.data.sections[1]);
-                setAlbum(res.data.sections[2]);
-                setColection(res.data.sections[4]);
-                setAppear(res.data.sections[5]);
-                dispatch(setIsLoading(false));
-            }
-        };
-
-        getArtist();
-    }, [artist, dispatch]);
+        dispatch(setIsLoading(true));
+        if (Artist?.err === 0) {
+            setSingerInfo(Artist.data);
+            setPopularSong(Artist.data.sections[0]);
+            setSingleEp(Artist.data.sections[1]);
+            setAlbum(Artist.data.sections[2]);
+            setColection(Artist.data.sections[4]);
+            setAppear(Artist.data.sections[5]);
+            dispatch(setIsLoading(false));
+        }
+    }, [Artist, dispatch]);
 
     let handleNumberFarorites = (number) => {
         let n = number / 1000;

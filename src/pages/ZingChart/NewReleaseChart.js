@@ -3,7 +3,7 @@ import styles from './NewReleaseChart.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-import { getNewReleaseChartAPI } from '@/services/ChartService';
+import { getNewReleaseChartAPI, useGetNewReleaseChartAPI } from '@/services/ChartService';
 import MediaList from '@/components/MediaList/MediaList';
 import { useDispatch } from 'react-redux';
 import { setIsLoading } from '@/features/Song/SongSlice';
@@ -17,20 +17,15 @@ function NewReleaseChart() {
     let dispatch = useDispatch();
     let playlist = [];
 
+    let { chartNewRelease } = useGetNewReleaseChartAPI();
+
     useEffect(() => {
-        const getNewReleaseChart = async () => {
-            dispatch(setIsLoading(true));
-
-            let res = await getNewReleaseChartAPI();
-
-            if (res.err === 0) {
-                setNewRelease(res.data);
-                dispatch(setIsLoading(false));
-            }
-        };
-
-        getNewReleaseChart();
-    }, [dispatch]);
+        dispatch(setIsLoading(true));
+        if (chartNewRelease?.err === 0) {
+            setNewRelease(chartNewRelease.data);
+            dispatch(setIsLoading(false));
+        }
+    }, [chartNewRelease, dispatch]);
 
     let handlePlaylist = () => {
         if (newRelease.items) {

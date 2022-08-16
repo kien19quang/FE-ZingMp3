@@ -5,7 +5,7 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faMinus, faMusic, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { updatePlaylist, updateIndex, updatePlay, updateLinkSong, setIsLoading } from '@/features/Song/SongSlice';
 import { getSong } from '@/services/SongService';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -56,8 +56,10 @@ function WeekChart({ data, type = 'music', styleActive = 'default' }) {
     };
 
     let handlePlayMusic = async (item, index) => {
+        dispatch(setIsLoading(true));
         let res = await getSong(item.encodeId);
         if (res.err === 0) {
+            dispatch(setIsLoading(false));
             dispatch(updateLinkSong(res.data));
         }
 

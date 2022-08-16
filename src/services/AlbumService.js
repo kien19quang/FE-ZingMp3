@@ -1,7 +1,16 @@
-import axios from '../utils/httpRequest';
+//import axios from '../utils/httpRequest';
+import useSWR from 'swr';
 
-const getDetailAlbum = (inputId) => {
-    return axios.get(`/album/getDetailPlaylist?id=${inputId}`);
-};
+function useAlbum(inputId) {
+    const {
+        data: album,
+        error,
+        mutate,
+    } = useSWR(`/album/getDetailPlaylist?id=${inputId}`, {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnFocus: false,
+    });
+    return { album, error, mutate };
+}
 
-export { getDetailAlbum };
+export { useAlbum };

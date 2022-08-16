@@ -1,18 +1,18 @@
-import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
-import styles from './ZingChart.modulo.scss';
-import { getChartHomeAPI } from '@/services/ChartService';
 import MediaList from '@/components/MediaList/MediaList';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
-import { options } from '@/config/ConfigChart';
-import { Chart, registerables } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import _ from 'lodash';
 import WeekChart from '@/components/WeekChart/WeekChart';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { options } from '@/config/ConfigChart';
 import { setIsLoading } from '@/features/Song/SongSlice';
+import { useGetChartHome } from '@/services/ChartService';
+import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chart, registerables } from 'chart.js';
+import classNames from 'classnames/bind';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import styles from './ZingChart.modulo.scss';
 
 const cx = classNames.bind(styles);
 Chart.register(...registerables);
@@ -31,22 +31,17 @@ function ZingChart() {
     let data = {};
     let playlist = [];
 
+    let { chartHome } = useGetChartHome();
+
     useEffect(() => {
-        const getChartHome = async () => {
-            dispatch(setIsLoading(true));
-
-            let res = await getChartHomeAPI();
-
-            if (res.err === 0) {
-                setItems(res.data.RTChart.items);
-                setChart(res.data.RTChart.chart);
-                setWeekChart(res.data.weekChart);
-                dispatch(setIsLoading(false));
-            }
-        };
-
-        getChartHome();
-    }, [dispatch]);
+        dispatch(setIsLoading(true));
+        if (chartHome?.err === 0) {
+            setItems(chartHome.data.RTChart.items);
+            setChart(chartHome.data.RTChart.chart);
+            setWeekChart(chartHome.data.weekChart);
+            dispatch(setIsLoading(false));
+        }
+    }, [chartHome, dispatch]);
 
     let handleTimes = (times) => {
         let labels = [];
@@ -70,7 +65,6 @@ function ZingChart() {
 
     const handleChart = () => {
         if (!_.isEmpty(chart) && items) {
-            console.log('re-render');
             options.scales.y.min = chart.minScore;
             options.scales.y.max = chart.maxScore;
 
@@ -145,7 +139,6 @@ function ZingChart() {
     };
 
     handleChart();
-
     return (
         <>
             <div className={cx('wrapper-chart')}>
@@ -165,50 +158,62 @@ function ZingChart() {
                 </div>
             </div>
 
-            <div className={cx('wrapper-weektop')}>
-                <div className={cx('bg-alpha')}>
-                    <div className={cx('section-header')}>
-                        {!_.isEmpty(weekChart) && <Link to={weekChart.vn.link}>Bảng xếp hạng tuần</Link>}
-                    </div>
-
-                    <div className={cx('week-chart-box')}>
-                        <div className={cx('week-chart-item')}>
-                            <div className={cx('header-item')}>
-                                {!_.isEmpty(weekChart) && <Link to={weekChart.vn.link}>Việt Nam</Link>}
-                                <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
-                            </div>
-                            {!_.isEmpty(weekChart) && <WeekChart data={weekChart.vn.items.slice(0, 5)} type="rank" />}
-                            <div className={cx('weekchart-footer')}>
-                                <div className="show-more">Xem thêm</div>
-                            </div>
+            {!_.isEmpty(weekChart) && (
+                <div className={cx('wrapper-weektop')}>
+                    <div className={cx('bg-alpha')}>
+                        <div className={cx('section-header')}>
+                            <Link to={weekChart.vn.link}>Bảng xếp hạng tuần</Link>
                         </div>
 
-                        <div className={cx('week-chart-item')}>
-                            <div className={cx('header-item')}>
-                                {!_.isEmpty(weekChart) && <Link to={weekChart.us.link}>US-UK</Link>}
-                                <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
+                        <div className={cx('week-chart-box')}>
+                            <div className={cx('week-chart-item')}>
+                                <div className={cx('header-item')}>
+                                    <Link to={weekChart.vn.link}>Việt Nam</Link>
+                                    <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
+                                </div>
+                                {!_.isEmpty(weekChart) && (
+                                    <WeekChart data={weekChart.vn.items.slice(0, 5)} type="rank" />
+                                )}
+                                <div className={cx('weekchart-footer')}>
+                                    <Link to={weekChart.vn.link} className="show-more">
+                                        Xem thêm
+                                    </Link>
+                                </div>
                             </div>
-                            {!_.isEmpty(weekChart) && <WeekChart data={weekChart.us.items.slice(0, 5)} type="rank" />}
-                            <div className={cx('weekchart-footer')}>
-                                <div className="show-more">Xem thêm</div>
-                            </div>
-                        </div>
 
-                        <div className={cx('week-chart-item')}>
-                            <div className={cx('header-item')}>
-                                {!_.isEmpty(weekChart) && <Link to={weekChart.korea.link}>K-POP</Link>}
-                                <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
+                            <div className={cx('week-chart-item')}>
+                                <div className={cx('header-item')}>
+                                    <Link to={weekChart.us.link}>US-UK</Link>
+                                    <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
+                                </div>
+                                {!_.isEmpty(weekChart) && (
+                                    <WeekChart data={weekChart.us.items.slice(0, 5)} type="rank" />
+                                )}
+                                <div className={cx('weekchart-footer')}>
+                                    <Link to={weekChart.us.link} className="show-more">
+                                        Xem thêm
+                                    </Link>
+                                </div>
                             </div>
-                            {!_.isEmpty(weekChart) && (
-                                <WeekChart data={weekChart.korea.items.slice(0, 5)} type="rank" />
-                            )}
-                            <div className={cx('weekchart-footer')}>
-                                <div className="show-more">Xem thêm</div>
+
+                            <div className={cx('week-chart-item')}>
+                                <div className={cx('header-item')}>
+                                    <Link to={weekChart.korea.link}>K-POP</Link>
+                                    <FontAwesomeIcon icon={faCirclePlay} className="icon-play" />
+                                </div>
+                                {!_.isEmpty(weekChart) && (
+                                    <WeekChart data={weekChart.korea.items.slice(0, 5)} type="rank" />
+                                )}
+                                <div className={cx('weekchart-footer')}>
+                                    <Link to={weekChart.korea.link} className="show-more">
+                                        Xem thêm
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }

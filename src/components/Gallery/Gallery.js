@@ -7,7 +7,7 @@ import classNames from 'classnames/bind';
 import styles from './Gallery.modulo.scss';
 import { getSongInfo, getSong } from '@/services/SongService';
 import { useDispatch } from 'react-redux';
-import { updatePlaylist, updateIndex, updatePlay, updateLinkSong } from '@/features/Song/SongSlice';
+import { updatePlaylist, updateIndex, updatePlay, updateLinkSong, setIsLoading } from '@/features/Song/SongSlice';
 import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
@@ -37,10 +37,12 @@ function Gallery({ bannerSlider, singers = [], type = 'primary' }) {
     let handlePlayBanner = async (item) => {
         let arr = item.link.split('/');
         if (arr[1] === 'bai-hat') {
+            dispatch(setIsLoading(true));
             let songInfo = await getSongInfo(item.encodeId);
 
             if (songInfo.err === 0) {
                 let res = await getSong(songInfo.data.encodeId);
+                dispatch(setIsLoading(false));
                 dispatch(updateLinkSong(res.data));
                 dispatch(updatePlaylist([songInfo.data]));
                 dispatch(updateIndex(0));

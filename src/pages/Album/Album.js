@@ -1,25 +1,25 @@
-import { useParams } from 'react-router-dom';
-import classNames from 'classnames/bind';
-import styles from './Album.modulo.scss';
-import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { getDetailAlbum } from '@/services/AlbumService';
-import moment from 'moment';
 import MediaList from '@/components/MediaList/MediaList';
-import _ from 'lodash';
 import {
-    updatePlaylist,
-    updateIndex,
-    updatePlay,
-    updateLinkSong,
     addRecentSong,
-    updatePauseFromAlbum,
+    setIsLoading,
+    updateIndex,
     updateIsPlaying,
+    updateLinkSong,
+    updatePauseFromAlbum,
+    updatePlay,
+    updatePlaylist,
 } from '@/features/Song/SongSlice';
+import { useAlbum } from '@/services/AlbumService';
 import { getSong } from '@/services/SongService';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames/bind';
+import _ from 'lodash';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsLoading } from '@/features/Song/SongSlice';
+import { useParams } from 'react-router-dom';
+import styles from './Album.modulo.scss';
 
 const cx = classNames.bind(styles);
 
@@ -39,20 +39,16 @@ function Album() {
     let isPlaying = useSelector((state) => state.song.isPlaying);
     let playlist = useSelector((state) => state.song.playlist);
 
+    let { album } = useAlbum(id);
+    console.log(album);
+
     useEffect(() => {
-        const getDetailAlbums = async () => {
-            dispatch(setIsLoading(true));
-            let res = await getDetailAlbum(id);
-
-            if (res.err === 0) {
-                setData(res.data);
-                dispatch(setIsLoading(false));
-            }
-        };
-
-        getDetailAlbums();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, dispatch]);
+        dispatch(setIsLoading(true));
+        if (!_.isEmpty(album) && album.err === 0) {
+            setData(album.data);
+            dispatch(setIsLoading(false));
+        }
+    }, [album, dispatch]);
 
     useEffect(() => {
         if (!_.isEmpty(data)) {
